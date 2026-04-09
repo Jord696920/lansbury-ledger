@@ -68,6 +68,14 @@
   outline-offset: 2px;
   border-radius: 4px;
 }
+/* Inputs get a subtler ring instead of the 2px outline */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  border-color: var(--color-accent-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
+}
 html {
   color-scheme: dark;
 }
@@ -81,6 +89,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+::selection {
+  background: color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+  color: var(--color-text-primary);
 }
 
 /* ── Typography ───────────────────────────────────────── */
