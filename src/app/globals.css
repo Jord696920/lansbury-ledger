@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 /* ── Design Tokens: Dark (Midnight Navy — default) ─────── */
@@ -19,15 +18,17 @@
   --color-accent-purple: #A78BFA;
   --color-accent-blue: #6B8AFF;
   --color-accent-cyan: #22D3EE;
+  --color-accent-pink: #F472B6;
   --color-surface-green: rgba(0, 212, 126, 0.08);
   --color-surface-red: rgba(255, 77, 106, 0.08);
   --color-surface-blue: rgba(107, 138, 255, 0.08);
   --color-surface-amber: rgba(255, 176, 32, 0.08);
   --color-surface-purple: rgba(167, 139, 250, 0.08);
+  --color-surface-pink: rgba(244, 114, 182, 0.08);
 
-  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
-  --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-sans: var(--font-jakarta), system-ui, sans-serif;
+  --font-mono: var(--font-plex), monospace;
+  --font-display: var(--font-jakarta), system-ui, sans-serif;
 }
 
 /* ── Light Mode Override (Clean Day) ───────────────────── */
@@ -48,11 +49,13 @@
   --color-accent-purple: #7C3AED;
   --color-accent-blue: #4A6AE5;
   --color-accent-cyan: #0891B2;
+  --color-accent-pink: #DB2777;
   --color-surface-green: rgba(5, 150, 105, 0.06);
   --color-surface-red: rgba(220, 38, 38, 0.06);
   --color-surface-blue: rgba(74, 106, 229, 0.06);
   --color-surface-amber: rgba(217, 119, 6, 0.06);
   --color-surface-purple: rgba(124, 58, 237, 0.06);
+  --color-surface-pink: rgba(219, 39, 119, 0.06);
 }
 
 /* ── Base ─────────────────────────────────────────────── */

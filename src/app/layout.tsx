@@ -1,6 +1,21 @@
 import type { Metadata, Viewport } from 'next'
+import { Plus_Jakarta_Sans, IBM_Plex_Mono } from 'next/font/google'
 import { ThemeProvider } from '@/components/ui/theme-provider'
 import './globals.css'
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-jakarta',
+  weight: ['400', '500', '600', '700', '800'],
+  display: 'swap',
+})
+
+const plexMono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  variable: '--font-plex',
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: { default: 'Rod | Dashboard', template: 'Rod | %s' },
@@ -32,11 +47,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="h-full dark" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      </head>
+    <html lang="en" className={`h-full dark ${jakarta.variable} ${plexMono.variable}`} suppressHydrationWarning>
       <body className="h-full">
         <ThemeProvider>{children}</ThemeProvider>
       </body>
