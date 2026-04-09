@@ -90,7 +90,7 @@ export function Topbar() {
   const notifCount = events.length
 
   return (
-    <header className="flex h-16 items-center justify-between border-b border-border-subtle bg-bg-secondary px-6">
+    <header className="flex h-16 items-center justify-between border-b border-border-subtle bg-bg-primary px-6">
       {/* Left */}
       <div className="flex items-center gap-4">
         <div className="rounded-lg bg-bg-elevated px-3 py-1.5 text-sm font-bold text-text-primary">
@@ -122,7 +122,7 @@ export function Topbar() {
       <div className="flex items-center gap-3">
         <Link
           href="/invoices?action=new"
-          className="btn-press flex items-center gap-2 rounded-lg bg-accent-green px-4 py-2 text-sm font-semibold text-bg-primary transition-all hover:brightness-110"
+          className="btn-press flex items-center gap-2 rounded-xl bg-accent-primary px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:bg-accent-primary-light"
         >
           <Plus className="h-4 w-4" aria-hidden="true" />
           Quick Add
@@ -137,7 +137,7 @@ export function Topbar() {
           >
             <Bell className="h-5 w-5" />
             {notifCount > 0 && (
-              <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-accent-red text-[10px] font-bold text-white pulse-attention">
+              <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-accent-red text-[10px] font-bold text-white">
                 {notifCount}
               </span>
             )}

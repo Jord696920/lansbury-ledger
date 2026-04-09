@@ -47,7 +47,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`h-full dark ${jakarta.variable} ${plexMono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`h-full ${jakarta.variable} ${plexMono.variable}`} suppressHydrationWarning>
       <body className="h-full">
         <ThemeProvider>{children}</ThemeProvider>
       </body>

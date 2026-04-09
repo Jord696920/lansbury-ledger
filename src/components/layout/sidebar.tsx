@@ -42,17 +42,17 @@ export function Sidebar() {
       role="navigation"
       aria-label="Main navigation"
       className={cn(
-        'fixed left-0 top-0 z-40 flex h-full flex-col border-r border-border-subtle bg-bg-secondary transition-all duration-300',
+        'fixed left-0 top-0 z-40 flex h-full flex-col border-r border-border-subtle bg-bg-primary transition-all duration-300',
         collapsed ? 'w-16' : 'w-60'
       )}
     >
       {/* Logo */}
       <div className="flex h-16 items-center border-b border-border-subtle px-4">
-        <BookOpen className="h-7 w-7 shrink-0 text-accent-green" aria-hidden="true" />
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-primary text-sm font-bold text-white">R</div>
         {!collapsed && (
           <div className="ml-3 overflow-hidden">
-            <h1 className="text-sm font-extrabold tracking-tight text-text-primary">
-              Lansbury Ledger
+            <h1 className="text-sm font-bold tracking-tight text-text-primary">
+              Rod
             </h1>
             <p className="text-[10px] font-medium text-text-tertiary">Sole Trader Accounting</p>
           </div>
@@ -71,17 +71,15 @@ export function Sidebar() {
               aria-label={item.label}
               aria-current={isActive ? 'page' : undefined}
               className={cn(
-                'group relative flex items-center rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150',
+                'group relative flex items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150',
                 isActive
-                  ? 'bg-bg-elevated text-text-primary'
-                  : 'text-text-secondary hover:bg-bg-elevated hover:text-text-primary'
+                  ? 'bg-accent-primary-bg text-accent-primary'
+                  : 'text-text-secondary hover:bg-bg-secondary hover:text-text-primary'
               )}
             >
-              {isActive && (
-                <div className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-accent-primary" />
-              )}
               <Icon
                 className={cn('h-5 w-5 shrink-0 transition-colors', isActive ? 'text-accent-primary' : 'text-text-tertiary group-hover:text-text-secondary')}
+                strokeWidth={1.5}
                 aria-hidden="true"
               />
               {!collapsed && <span className="ml-3">{item.label}</span>}

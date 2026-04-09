@@ -10,22 +10,21 @@ interface StatusBadgeProps {
 }
 
 const variants: Record<BadgeVariant, string> = {
-  success: 'bg-surface-green text-accent-green border-accent-green/20',
-  warning: 'bg-surface-amber text-accent-amber border-accent-amber/20',
-  danger: 'bg-surface-red text-accent-red border-accent-red/20',
-  info: 'bg-surface-blue text-accent-blue border-accent-blue/20',
-  neutral: 'bg-bg-elevated text-text-secondary border-border-subtle',
-  purple: 'bg-surface-purple text-accent-purple border-accent-purple/20',
+  success: 'bg-surface-green text-accent-green',
+  warning: 'bg-surface-amber text-accent-amber',
+  danger: 'bg-surface-red text-accent-red',
+  info: 'bg-surface-blue text-accent-blue',
+  neutral: 'bg-bg-elevated text-text-secondary',
+  purple: 'bg-surface-purple text-accent-purple',
 }
 
-export function StatusBadge({ label, variant = 'neutral', pulse = false, size = 'sm' }: StatusBadgeProps) {
+export function StatusBadge({ label, variant = 'neutral', size = 'sm' }: StatusBadgeProps) {
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-full border font-medium',
+        'inline-flex items-center rounded-full font-medium',
         variants[variant],
-        pulse && 'pulse-attention',
-        size === 'sm' ? 'px-2 py-0.5 text-[10px]' : 'px-2.5 py-1 text-xs'
+        size === 'sm' ? 'px-2.5 py-0.5 text-[10px]' : 'px-3 py-1 text-xs'
       )}
     >
       {label}

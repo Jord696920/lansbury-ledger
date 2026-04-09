@@ -1,61 +1,96 @@
 @import "tailwindcss";
 
-/* ── Design Tokens: Dark (Midnight Navy — default) ─────── */
+/* ── Design Tokens: Light Mode (DEFAULT — warm banking aesthetic) ── */
 @theme inline {
-  --color-bg-primary: #0B0F1A;
-  --color-bg-secondary: #111827;
-  --color-bg-elevated: #1E2640;
-  --color-bg-hover: #253050;
-  --color-border-subtle: #1E2640;
-  --color-border-active: #2A3556;
-  --color-text-primary: #E8ECF4;
-  --color-text-secondary: #7A839B;
-  --color-text-tertiary: #4A5168;
-  --color-accent-primary: #6B8AFF;
-  --color-accent-green: #00D47E;
-  --color-accent-red: #FF4D6A;
-  --color-accent-amber: #FFB020;
-  --color-accent-purple: #A78BFA;
-  --color-accent-blue: #6B8AFF;
-  --color-accent-cyan: #22D3EE;
-  --color-accent-pink: #F472B6;
-  --color-surface-green: rgba(0, 212, 126, 0.08);
-  --color-surface-red: rgba(255, 77, 106, 0.08);
-  --color-surface-blue: rgba(107, 138, 255, 0.08);
-  --color-surface-amber: rgba(255, 176, 32, 0.08);
-  --color-surface-purple: rgba(167, 139, 250, 0.08);
-  --color-surface-pink: rgba(244, 114, 182, 0.08);
+  /* Backgrounds — warm whites */
+  --color-bg-primary: #FFFFFF;
+  --color-bg-secondary: #FAFAF8;
+  --color-bg-elevated: #F5F5F0;
+  --color-bg-hover: #EDEDEA;
+  --color-bg-page: #F0F0EC;
+
+  /* Borders — subtle, warm */
+  --color-border-subtle: #E5E5E0;
+  --color-border-active: #D0D0CA;
+  --color-border-strong: #B8B8B2;
+
+  /* Text — warm darks */
+  --color-text-primary: #1A1A18;
+  --color-text-secondary: #6B6B65;
+  --color-text-tertiary: #9A9A92;
+
+  /* Primary accent — Rod Navy */
+  --color-accent-primary: #1B3A6B;
+  --color-accent-primary-light: #2A5298;
+  --color-accent-primary-bg: #EDF2F9;
+
+  /* Semantic colours — rich, not neon */
+  --color-accent-green: #0A7B4F;
+  --color-accent-red: #C4362C;
+  --color-accent-amber: #B8860B;
+  --color-accent-purple: #6941C6;
+  --color-accent-blue: #1B3A6B;
+  --color-accent-cyan: #0E7490;
+  --color-accent-pink: #B93874;
+
+  /* Tinted backgrounds */
+  --color-surface-green: #ECFDF3;
+  --color-surface-red: #FEF2F1;
+  --color-surface-blue: #EDF2F9;
+  --color-surface-amber: #FEF9EC;
+  --color-surface-purple: #F4F0FF;
+  --color-surface-pink: #FDF2F8;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.08);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
 
   --font-sans: var(--font-jakarta), system-ui, sans-serif;
   --font-mono: var(--font-plex), monospace;
   --font-display: var(--font-jakarta), system-ui, sans-serif;
 }
 
-/* ── Light Mode Override (Clean Day) ───────────────────── */
-.light {
-  --color-bg-primary: #FFFFFF;
-  --color-bg-secondary: #F8F9FC;
-  --color-bg-elevated: #F0F2F7;
-  --color-bg-hover: #E8EBF2;
-  --color-border-subtle: #E2E5EE;
-  --color-border-active: #C8CDD8;
-  --color-text-primary: #0B0F1A;
-  --color-text-secondary: #5A6178;
-  --color-text-tertiary: #8A90A2;
-  --color-accent-primary: #4A6AE5;
-  --color-accent-green: #059669;
-  --color-accent-red: #DC2626;
-  --color-accent-amber: #D97706;
-  --color-accent-purple: #7C3AED;
-  --color-accent-blue: #4A6AE5;
-  --color-accent-cyan: #0891B2;
-  --color-accent-pink: #DB2777;
-  --color-surface-green: rgba(5, 150, 105, 0.06);
-  --color-surface-red: rgba(220, 38, 38, 0.06);
-  --color-surface-blue: rgba(74, 106, 229, 0.06);
-  --color-surface-amber: rgba(217, 119, 6, 0.06);
-  --color-surface-purple: rgba(124, 58, 237, 0.06);
-  --color-surface-pink: rgba(219, 39, 119, 0.06);
+/* ── Dark Mode (secondary — for night use) ────────────────── */
+.dark {
+  --color-bg-primary: #141413;
+  --color-bg-secondary: #1C1C1A;
+  --color-bg-elevated: #252523;
+  --color-bg-hover: #2E2E2B;
+  --color-bg-page: #0F0F0E;
+
+  --color-border-subtle: #2E2E2B;
+  --color-border-active: #3D3D38;
+  --color-border-strong: #4D4D47;
+
+  --color-text-primary: #F5F5F0;
+  --color-text-secondary: #9A9A92;
+  --color-text-tertiary: #6B6B65;
+
+  --color-accent-primary: #6B8AFF;
+  --color-accent-primary-light: #8BA3FF;
+  --color-accent-primary-bg: rgba(107,138,255,0.1);
+
+  --color-accent-green: #34D399;
+  --color-accent-red: #FB7185;
+  --color-accent-amber: #FBBF24;
+  --color-accent-purple: #A78BFA;
+  --color-accent-blue: #6B8AFF;
+  --color-accent-cyan: #22D3EE;
+  --color-accent-pink: #F472B6;
+
+  --color-surface-green: rgba(52,211,153,0.1);
+  --color-surface-red: rgba(251,113,133,0.1);
+  --color-surface-blue: rgba(107,138,255,0.1);
+  --color-surface-amber: rgba(251,191,36,0.1);
+  --color-surface-purple: rgba(167,139,250,0.1);
+  --color-surface-pink: rgba(244,114,182,0.1);
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-md: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.4);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.2);
 }
 
 /* ── Base ─────────────────────────────────────────────── */
@@ -68,22 +103,21 @@
   outline-offset: 2px;
   border-radius: 4px;
 }
-/* Inputs get a subtler ring instead of the 2px outline */
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
   outline: none;
   border-color: var(--color-accent-primary);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent-primary) 20%, transparent);
+  box-shadow: 0 0 0 3px var(--color-accent-primary-bg);
 }
 html {
-  color-scheme: dark;
-}
-html.light {
   color-scheme: light;
 }
+html.dark {
+  color-scheme: dark;
+}
 body {
-  background: var(--color-bg-primary);
+  background: var(--color-bg-page);
   color: var(--color-text-primary);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -91,7 +125,7 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 ::selection {
-  background: color-mix(in srgb, var(--color-accent-primary) 30%, transparent);
+  background: color-mix(in srgb, var(--color-accent-primary) 25%, transparent);
   color: var(--color-text-primary);
 }
 
@@ -106,27 +140,13 @@ body {
   letter-spacing: -0.02em;
 }
 
-/* ── Stagger entrance (applied via data-stagger attribute) */
-[data-stagger] {
-  opacity: 0;
-  transform: translateY(8px);
-  animation: staggerIn 0.4s ease-out forwards;
-}
-@keyframes staggerIn {
-  to { opacity: 1; transform: translateY(0); }
-}
-
 /* ── Card ─────────────────────────────────────────────── */
 .card-hover {
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 .card-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-md);
   border-color: var(--color-border-active);
-}
-.light .card-hover:hover {
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
 }
 
 /* ── Button press ─────────────────────────────────────── */
@@ -135,15 +155,6 @@ body {
 }
 .btn-press:active {
   transform: scale(0.98);
-}
-
-/* ── Pulse attention ──────────────────────────────────── */
-@keyframes gentlePulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}
-.pulse-attention {
-  animation: gentlePulse 2s ease-in-out infinite;
 }
 
 /* ── Slide-in panel ───────────────────────────────────── */
@@ -173,52 +184,39 @@ body {
 .skeleton {
   background: linear-gradient(
     90deg,
-    var(--color-bg-secondary) 25%,
-    var(--color-bg-elevated) 50%,
-    var(--color-bg-secondary) 75%
+    var(--color-bg-elevated) 25%,
+    var(--color-bg-hover) 50%,
+    var(--color-bg-elevated) 75%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
-  border-radius: 6px;
+  border-radius: 8px;
 }
 
 /* ── Fade-up entrance (page transition) ───────────────── */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 .page-enter {
-  animation: fadeUp 0.3s ease-out;
+  animation: fadeUp 0.25s ease-out;
 }
 
 /* ── Backdrop blur ────────────────────────────────────── */
 .backdrop-overlay {
   backdrop-filter: blur(4px);
-  background: rgba(0, 0, 0, 0.5);
-}
-.light .backdrop-overlay {
   background: rgba(0, 0, 0, 0.25);
 }
+.dark .backdrop-overlay {
+  background: rgba(0, 0, 0, 0.5);
+}
 
-/* ── Table row hover (left accent border) ─────────────── */
+/* ── Table row hover ─────────────────────────────────── */
 .row-hover {
-  position: relative;
   transition: background-color 0.15s ease;
 }
-.row-hover::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: var(--color-accent-green);
-  border-radius: 0 2px 2px 0;
-  opacity: 0;
-  transition: opacity 0.15s ease;
-}
-.row-hover:hover::before {
-  opacity: 1;
+.row-hover:hover {
+  background: var(--color-bg-secondary);
 }
 
 /* ── Theme toggle transition ──────────────────────────── */
@@ -237,7 +235,6 @@ body {
 
 /* ── Mobile-First Layout ─────────────────────────────── */
 
-/* Bottom sheet slide-up animation */
 @keyframes sheetUp {
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
@@ -253,7 +250,6 @@ body {
   animation: sheetDown 0.2s ease-in forwards;
 }
 
-/* Pull to refresh spinner */
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
@@ -261,7 +257,6 @@ body {
   animation: spin 0.8s linear infinite;
 }
 
-/* Safe area padding for iOS notch / home indicator */
 .safe-bottom {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
@@ -269,20 +264,17 @@ body {
   padding-top: env(safe-area-inset-top, 0px);
 }
 
-/* Prevent overscroll bounce on iOS in standalone mode */
 @media (display-mode: standalone) {
   body {
     overscroll-behavior: none;
   }
 }
 
-/* Touch target minimum size helper */
 .touch-target {
   min-height: 44px;
   min-width: 44px;
 }
 
-/* Hide scrollbar (for horizontal chip scrolls) */
 .scrollbar-none {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -291,12 +283,10 @@ body {
   display: none;
 }
 
-/* Scale on press — used on mobile buttons */
 .active\:scale-98:active {
   transform: scale(0.98);
 }
 
-/* Mobile card press effect (replaces hover on touch) */
 @media (hover: none) {
   .card-hover:active {
     transform: scale(0.98);

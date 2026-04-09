@@ -55,7 +55,7 @@ export function BottomTabs({ onNewTap }: BottomTabsProps) {
       {showMore && (
         <>
           <div className="fixed inset-0 z-40 backdrop-overlay" onClick={() => setShowMore(false)} />
-          <div className="fixed bottom-[calc(64px+env(safe-area-inset-bottom,0px))] left-0 right-0 z-50 mx-4 mb-2 rounded-xl border border-border-subtle bg-bg-secondary shadow-xl sheet-up">
+          <div className="fixed bottom-[calc(64px+env(safe-area-inset-bottom,0px))] left-0 right-0 z-50 mx-4 mb-2 rounded-2xl border border-border-subtle bg-bg-primary shadow-xl sheet-up">
             <div className="p-2">
               {morePages.map((page) => {
                 const isActive = pathname === page.href || pathname.startsWith(page.href + '/')
@@ -80,7 +80,7 @@ export function BottomTabs({ onNewTap }: BottomTabsProps) {
 
       {/* Tab bar */}
       <nav
-        className="fixed bottom-0 left-0 right-0 z-30 border-t border-border-subtle bg-bg-secondary safe-bottom lg:hidden"
+        className="fixed bottom-0 left-0 right-0 z-30 border-t border-border-subtle bg-bg-primary shadow-lg safe-bottom lg:hidden"
         role="navigation"
         aria-label="Mobile navigation"
       >

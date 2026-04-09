@@ -22,8 +22,8 @@ export function MobileTopbar() {
   const title = pageTitles[pathname] || 'Rod'
 
   return (
-    <header className="flex h-12 items-center justify-between border-b border-border-subtle bg-bg-secondary px-4 lg:hidden safe-top">
-      <span className="text-sm font-extrabold tracking-tight text-accent-green">Rod</span>
+    <header className="flex h-12 items-center justify-between border-b border-border-subtle bg-bg-primary px-4 lg:hidden safe-top">
+      <span className="text-sm font-bold tracking-tight text-accent-primary">Rod</span>
       <h1 className="text-sm font-semibold text-text-primary">{title}</h1>
       <div className="flex items-center gap-1">
         <ThemeToggle />

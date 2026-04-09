@@ -35,7 +35,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <MobileTopbar />
 
           {/* Main content */}
-          <main className="flex-1 overflow-y-auto px-4 py-4 pb-24 lg:p-6 lg:pb-6">
+          <main className="flex-1 overflow-y-auto bg-bg-page px-4 py-5 pb-24 lg:px-8 lg:py-6 lg:pb-6">
             <div className="page-enter">
               {children}
             </div>
