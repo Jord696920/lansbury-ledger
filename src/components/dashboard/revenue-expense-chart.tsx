@@ -23,23 +23,13 @@ export const RevenueExpenseChart = memo(function RevenueExpenseChart({ data }: {
         ) : (
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data} barGap={2}>
-              <defs>
-                <linearGradient id="greenGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor={CHART.colors.green} stopOpacity={1} />
-                  <stop offset="100%" stopColor={CHART.colors.green} stopOpacity={0.6} />
-                </linearGradient>
-                <linearGradient id="redGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor={CHART.colors.red} stopOpacity={1} />
-                  <stop offset="100%" stopColor={CHART.colors.red} stopOpacity={0.6} />
-                </linearGradient>
-              </defs>
               <CartesianGrid strokeDasharray="3 3" stroke={CHART.grid} vertical={false} />
               <XAxis dataKey="month" tick={{ fill: CHART.text, fontSize: CHART.textSize }} axisLine={{ stroke: CHART.axis }} tickLine={false} />
               <YAxis tick={{ fill: CHART.text, fontSize: CHART.textSize }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
               <Tooltip contentStyle={CHART.tooltip} formatter={(value) => formatCurrency(Number(value))} labelStyle={{ color: CHART.text }} />
               <Legend wrapperStyle={{ fontSize: '11px', color: CHART.text }} />
-              <Bar dataKey="revenue" name="Revenue" fill="url(#greenGrad)" radius={[4, 4, 0, 0]} animationDuration={800} />
-              <Bar dataKey="expenses" name="Expenses" fill="url(#redGrad)" radius={[4, 4, 0, 0]} animationDuration={800} animationBegin={200} />
+              <Bar dataKey="revenue" name="Revenue" fill={CHART.colors.blue} radius={[4, 4, 0, 0]} />
+              <Bar dataKey="expenses" name="Expenses" fill={CHART.colors.red} radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         )}

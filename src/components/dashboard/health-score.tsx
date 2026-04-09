@@ -169,7 +169,7 @@ export function HealthScore() {
   }
 
   return (
-    <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5" data-stagger style={{ animationDelay: '300ms' }}>
+    <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5">
       <div className="mb-4 flex items-start gap-5">
         {/* Score Ring */}
         <div className="relative shrink-0">

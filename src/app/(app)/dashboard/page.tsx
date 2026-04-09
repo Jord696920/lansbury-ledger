@@ -10,7 +10,7 @@ import { RodSays } from '@/components/dashboard/rod-says'
 import { getDashboardSummary, getInvoices, getBASPeriods } from '@/lib/queries'
 import { getEOFYDate, getCurrentQuarter } from '@/lib/constants'
 import { formatCurrency } from '@/lib/utils'
-import { useAnimatedNumber } from '@/hooks/use-animated-number'
+
 import { DollarSign, TrendingUp, Receipt, Calculator, Target, CalendarClock, ArrowRight } from 'lucide-react'
 import { differenceInDays, format, subMonths, startOfMonth, endOfMonth, getDaysInMonth } from 'date-fns'
 import Link from 'next/link'
@@ -106,9 +106,6 @@ export default function DashboardPage() {
   const basDueDate = new Date(basQuarterEnd.getFullYear(), basQuarterEnd.getMonth() + 1, 28)
   const basDueDays = Math.max(0, differenceInDays(basDueDate, now))
 
-  // Animated hero number
-  const animatedRevenue = useAnimatedNumber(loading ? 0 : monthRevenue, 1200)
-
   // SVG ring for target
   const radius = 58
   const circumference = 2 * Math.PI * radius
@@ -164,7 +161,7 @@ export default function DashboardPage() {
               </span>
             </div>
             <p className="font-financial text-2xl font-bold text-text-primary lg:text-3xl">
-              {formatCurrency(animatedRevenue)}
+              {formatCurrency(monthRevenue)}
             </p>
             <p className="mt-1 text-xs text-text-secondary lg:text-sm">
               of {formatCurrency(MONTHLY_TARGET)} target

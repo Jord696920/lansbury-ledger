@@ -147,7 +147,7 @@ export function Topbar() {
           {showNotifs && (
             <>
               <div className="fixed inset-0 z-40" onClick={() => setShowNotifs(false)} />
-              <div className="absolute right-0 top-full z-50 mt-2 w-80 rounded-2xl border border-border-subtle bg-bg-primary shadow-lg" style={{ animation: 'staggerIn 0.2s ease-out' }}>
+              <div className="absolute right-0 top-full z-50 mt-2 w-80 rounded-2xl border border-border-subtle bg-bg-primary shadow-lg">
                 <div className="flex items-center justify-between border-b border-border-subtle px-4 py-3">
                   <p className="text-xs font-semibold text-text-primary">Notifications</p>
                   <button onClick={() => setShowNotifs(false)} className="text-text-tertiary hover:text-text-secondary" aria-label="Close notifications">

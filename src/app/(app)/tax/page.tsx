@@ -123,7 +123,7 @@ export default function TaxPage() {
           <p className="text-sm text-text-secondary">FY2025-26 estimated tax liability</p>
         </div>
         {eofyDays <= 90 && (
-          <div className="rounded-lg border border-accent-red/20 bg-surface-red px-4 py-2 text-sm font-semibold text-accent-red pulse-attention">
+          <div className="rounded-lg border border-accent-red/20 bg-surface-red px-4 py-2 text-sm font-semibold text-accent-red">
             {eofyDays} days to EOFY
           </div>
         )}
@@ -131,7 +131,7 @@ export default function TaxPage() {
 
       {/* EOFY badge on mobile */}
       {eofyDays <= 90 && (
-        <div className="rounded-lg border border-accent-red/20 bg-surface-red px-3 py-2 text-center text-xs font-semibold text-accent-red pulse-attention lg:hidden">
+        <div className="rounded-lg border border-accent-red/20 bg-surface-red px-3 py-2 text-center text-xs font-semibold text-accent-red lg:hidden">
           {eofyDays} days to EOFY
         </div>
       )}

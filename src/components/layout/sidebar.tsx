@@ -17,7 +17,6 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
-  BookOpen,
 } from 'lucide-react'
 
 const navItems = [
