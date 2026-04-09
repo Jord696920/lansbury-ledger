@@ -54,7 +54,7 @@ export default function DeductionsPage() {
       ) : (
         <div className="space-y-3">
           {filtered.map((rule) => (
-            <div key={rule.id} className="rounded-xl border border-border-subtle bg-bg-secondary p-5 card-hover">
+            <div key={rule.id} className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5 card-hover">
               <div className="mb-2 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Shield className={cn('h-4 w-4', rule.is_grey_area ? 'text-accent-amber' : 'text-accent-green')} />

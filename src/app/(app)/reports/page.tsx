@@ -48,7 +48,7 @@ export default function ReportsPage() {
       </div>
 
       {selectedReport && (
-        <div className="rounded-xl border border-border-subtle bg-bg-secondary p-8 text-center">
+        <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-8 text-center">
           <BarChart3 className="mx-auto mb-3 h-12 w-12 text-text-tertiary" />
           <h3 className="text-lg font-semibold text-text-primary">
             {reports.find((r) => r.id === selectedReport)?.name}

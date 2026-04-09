@@ -13,7 +13,7 @@ interface MonthlyData {
 
 export const RevenueExpenseChart = memo(function RevenueExpenseChart({ data }: { data: MonthlyData[] }) {
   return (
-    <div className="rounded-xl border border-border-subtle bg-bg-secondary p-5">
+    <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5">
       <h3 className="mb-4 text-sm font-semibold text-text-primary">Revenue vs Expenses</h3>
       <div className="h-[280px]">
         {data.every((d) => d.revenue === 0 && d.expenses === 0) ? (

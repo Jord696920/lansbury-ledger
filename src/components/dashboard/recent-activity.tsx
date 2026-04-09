@@ -7,7 +7,7 @@ import type { Transaction, Invoice } from '@/types/database'
 
 export function RecentTransactions({ transactions }: { transactions: Transaction[] }) {
   return (
-    <div className="rounded-xl border border-border-subtle bg-bg-secondary p-5">
+    <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5">
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-sm font-semibold text-text-primary">Recent Transactions</h3>
         <Link href="/transactions" className="text-xs text-accent-blue hover:underline">
@@ -48,7 +48,7 @@ export function RecentTransactions({ transactions }: { transactions: Transaction
 
 export function RecentInvoices({ invoices }: { invoices: Invoice[] }) {
   return (
-    <div className="rounded-xl border border-border-subtle bg-bg-secondary p-5">
+    <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5">
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-sm font-semibold text-text-primary">Recent Invoices</h3>
         <Link href="/invoices" className="text-xs text-accent-blue hover:underline">

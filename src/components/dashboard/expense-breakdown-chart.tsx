@@ -17,7 +17,7 @@ export const ExpenseBreakdownChart = memo(function ExpenseBreakdownChart({ data 
   const chartData = otherTotal > 0 ? [...top8, { name: 'Other', value: otherTotal }] : top8
 
   return (
-    <div className="rounded-xl border border-border-subtle bg-bg-secondary p-5">
+    <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5">
       <h3 className="mb-4 text-sm font-semibold text-text-primary">Expense Breakdown</h3>
       <div className="h-[280px]">
         {chartData.length === 0 ? (

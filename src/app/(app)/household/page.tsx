@@ -104,28 +104,28 @@ export default function HouseholdPage() {
 
       {/* Hero Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <div className="rounded-xl border border-border-subtle bg-bg-secondary p-4">
+        <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-4">
           <div className="mb-2 flex items-center gap-2">
             <Wallet className="h-4 w-4 text-accent-green" />
-            <span className="text-xs font-medium text-text-tertiary">Take-Home Pay</span>
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-text-tertiary">Take-Home Pay</span>
           </div>
           <p className="font-financial text-2xl font-bold text-accent-green">{formatCurrency(monthlyTakeHome)}</p>
           <p className="text-[11px] text-text-tertiary">/month average (after tax)</p>
         </div>
 
-        <div className="rounded-xl border border-border-subtle bg-bg-secondary p-4">
+        <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-4">
           <div className="mb-2 flex items-center gap-2">
             <Coffee className="h-4 w-4 text-accent-amber" />
-            <span className="text-xs font-medium text-text-tertiary">Household Costs</span>
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-text-tertiary">Household Costs</span>
           </div>
           <p className="font-financial text-2xl font-bold text-accent-amber">{formatCurrency(totalMonthlyCosts)}</p>
           <p className="text-[11px] text-text-tertiary">/month estimated</p>
         </div>
 
-        <div className="rounded-xl border border-border-subtle bg-bg-secondary p-4">
+        <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-4">
           <div className="mb-2 flex items-center gap-2">
             <PiggyBank className="h-4 w-4 text-accent-primary" />
-            <span className="text-xs font-medium text-text-tertiary">Monthly Freedom</span>
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-text-tertiary">Monthly Freedom</span>
           </div>
           <p className={cn('font-financial text-2xl font-bold', monthlyFreedom >= 0 ? 'text-accent-green' : 'text-accent-red')}>
             {formatCurrency(monthlyFreedom)}
@@ -133,10 +133,10 @@ export default function HouseholdPage() {
           <p className="text-[11px] text-text-tertiary">{monthlyFreedom >= 0 ? 'surplus after costs' : 'shortfall'}</p>
         </div>
 
-        <div className="rounded-xl border border-border-subtle bg-bg-secondary p-4">
+        <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-4">
           <div className="mb-2 flex items-center gap-2">
             <ShieldCheck className="h-4 w-4 text-accent-cyan" />
-            <span className="text-xs font-medium text-text-tertiary">Runway</span>
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-text-tertiary">Runway</span>
           </div>
           <p className="font-financial text-2xl font-bold text-accent-cyan">{runwayMonths}</p>
           <p className="text-[11px] text-text-tertiary">months of costs covered by FY earnings</p>
@@ -146,7 +146,7 @@ export default function HouseholdPage() {
       {/* Money Flow Breakdown */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {/* Where does it go? */}
-        <div className="rounded-xl border border-border-subtle bg-bg-secondary p-5">
+        <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5">
           <h3 className="mb-4 text-sm font-semibold text-text-primary">Where Your Revenue Goes</h3>
           <div className="space-y-2.5">
             {[
@@ -175,7 +175,7 @@ export default function HouseholdPage() {
         </div>
 
         {/* Household Cost Breakdown */}
-        <div className="rounded-xl border border-border-subtle bg-bg-secondary p-5">
+        <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5">
           <h3 className="mb-4 text-sm font-semibold text-text-primary">Monthly Household Costs</h3>
           <div className="space-y-2">
             {Object.entries(MONTHLY_COSTS).map(([key, val]) => (
@@ -196,7 +196,7 @@ export default function HouseholdPage() {
       </div>
 
       {/* Monthly Take-Home Trend */}
-      <div className="rounded-xl border border-border-subtle bg-bg-secondary p-5">
+      <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5">
         <h3 className="mb-4 text-sm font-semibold text-text-primary">Monthly Take-Home Trend</h3>
         <div className="flex items-end gap-2" style={{ height: 140 }}>
           {monthlyTrend.map((m, i) => {

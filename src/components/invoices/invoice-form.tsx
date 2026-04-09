@@ -323,7 +323,7 @@ export function InvoiceForm({ onClose, onSaved, duplicate }: InvoiceFormProps) {
               <ChevronDown className="h-4 w-4 text-text-tertiary" />
             </button>
             {showTerms && (
-              <div className="absolute left-0 right-0 top-full z-10 mt-1 rounded-xl border border-border-subtle bg-bg-secondary shadow-lg">
+              <div className="absolute left-0 right-0 top-full z-10 mt-1 rounded-2xl border border-border-subtle bg-bg-primary shadow-sm shadow-lg">
                 {TERMS_OPTIONS.map((t) => (
                   <button
                     key={t}

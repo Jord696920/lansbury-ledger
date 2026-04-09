@@ -148,7 +148,7 @@ export function TransactionDetail({ transaction, accounts, onClose, onUpdate }: 
             </div>
             <p className="mt-1 text-sm text-text-primary">{transaction.ai_category_suggestion}</p>
             <div className="mt-2 flex gap-2">
-              <button onClick={acceptAISuggestion} className="btn-press flex items-center gap-1 rounded-md bg-accent-purple px-3 py-1 text-xs font-medium text-white hover:brightness-110">
+              <button onClick={acceptAISuggestion} className="btn-press flex items-center gap-1 rounded-md bg-accent-purple px-3 py-1 text-xs font-medium text-white hover:opacity-90">
                 <Check className="h-3 w-3" aria-hidden="true" /> Accept
               </button>
             </div>
@@ -256,7 +256,7 @@ export function TransactionDetail({ transaction, accounts, onClose, onUpdate }: 
           <button
             onClick={checkDeductible}
             disabled={checkingDeduction}
-            className="btn-press flex w-full items-center justify-center gap-2 rounded-lg border border-accent-purple/30 bg-surface-purple px-4 py-2.5 text-sm font-medium text-accent-purple transition-colors hover:brightness-110 disabled:opacity-60"
+            className="btn-press flex w-full items-center justify-center gap-2 rounded-lg border border-accent-purple/30 bg-surface-purple px-4 py-2.5 text-sm font-medium text-accent-purple transition-colors hover:opacity-90 disabled:opacity-60"
           >
             {checkingDeduction ? <Loader2 className="h-4 w-4 animate-spin" /> : <Shield className="h-4 w-4" />}
             {checkingDeduction ? 'Checking...' : 'Is this deductible?'}
@@ -299,7 +299,7 @@ export function TransactionDetail({ transaction, accounts, onClose, onUpdate }: 
           <button onClick={onClose} className="btn-press flex-1 rounded-lg border border-border-subtle px-4 py-2.5 text-sm font-medium text-text-secondary hover:bg-bg-elevated">
             Cancel
           </button>
-          <button onClick={handleSave} disabled={saving} className="btn-press flex-1 rounded-lg bg-accent-green px-4 py-2.5 text-sm font-semibold text-bg-primary hover:brightness-110 disabled:opacity-50">
+          <button onClick={handleSave} disabled={saving} className="btn-press flex-1 rounded-lg bg-accent-primary px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50">
             {saving ? 'Saving...' : 'Save Changes'}
           </button>
         </div>

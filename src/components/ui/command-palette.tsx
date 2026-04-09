@@ -108,7 +108,7 @@ export function CommandPalette() {
       />
 
       {/* Modal */}
-      <div className="fixed left-1/2 top-[20%] z-[91] w-full max-w-lg -translate-x-1/2 rounded-xl border border-border-subtle bg-bg-secondary shadow-2xl"
+      <div className="fixed left-1/2 top-[20%] z-[91] w-full max-w-lg -translate-x-1/2 rounded-2xl border border-border-subtle bg-bg-primary shadow-sm shadow-2xl"
         style={{ animation: 'countUp 0.15s ease-out' }}
       >
         {/* Search Input */}

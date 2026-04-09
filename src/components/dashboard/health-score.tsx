@@ -146,7 +146,7 @@ export function HealthScore() {
 
   // Score colour
   const scoreColor = totalScore >= 80 ? 'text-accent-green' : totalScore >= 50 ? 'text-accent-amber' : 'text-accent-red'
-  const ringColor = totalScore >= 80 ? '#00D47E' : totalScore >= 50 ? '#FFB020' : '#FF4D6A'
+  const ringColor = totalScore >= 80 ? 'var(--color-accent-green)' : totalScore >= 50 ? 'var(--color-accent-amber)' : 'var(--color-accent-red)'
 
   // SVG ring
   const radius = 52
@@ -155,7 +155,7 @@ export function HealthScore() {
 
   if (loading) {
     return (
-      <div className="rounded-xl border border-border-subtle bg-bg-secondary p-5">
+      <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5">
         <div className="flex items-center gap-4">
           <div className="skeleton h-28 w-28 rounded-full" />
           <div className="flex-1">
@@ -169,7 +169,7 @@ export function HealthScore() {
   }
 
   return (
-    <div className="rounded-xl border border-border-subtle bg-bg-secondary p-5" data-stagger style={{ animationDelay: '300ms' }}>
+    <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5" data-stagger style={{ animationDelay: '300ms' }}>
       <div className="mb-4 flex items-start gap-5">
         {/* Score Ring */}
         <div className="relative shrink-0">

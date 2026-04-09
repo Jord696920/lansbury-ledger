@@ -60,7 +60,7 @@ export const RevenueForecast = memo(function RevenueForecast({ invoices }: Reven
   const worstMonth = data.monthlyRevenues.length > 0 ? Math.min(...data.monthlyRevenues.filter(v => v > 0)) : 0
 
   return (
-    <div className="rounded-xl border border-border-subtle bg-bg-secondary p-5">
+    <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5">
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h3 className="text-sm font-semibold text-text-primary">Revenue Forecast</h3>
@@ -90,11 +90,11 @@ export const RevenueForecast = memo(function RevenueForecast({ invoices }: Reven
               contentStyle={{ backgroundColor: 'var(--color-bg-elevated)', border: '1px solid var(--color-border-subtle)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '12px' }}
               formatter={(value) => formatCurrency(Number(value))}
             />
-            <ReferenceLine y={10000} stroke="#FFB020" strokeDasharray="6 4" strokeWidth={1} label={{ value: '$10K target', fill: '#FFB020', fontSize: 9, position: 'right' }} />
-            <Area dataKey="upper" stroke="none" fill="rgba(34, 211, 238, 0.08)" />
+            <ReferenceLine y={10000} stroke="var(--color-accent-amber)" strokeDasharray="6 4" strokeWidth={1} label={{ value: '$10K target', fill: 'var(--color-accent-amber)', fontSize: 9, position: 'right' }} />
+            <Area dataKey="upper" stroke="none" fill="var(--color-accent-primary-bg)" />
             <Area dataKey="lower" stroke="none" fill="var(--color-bg-secondary)" />
-            <Line dataKey="actual" stroke="#00D47E" strokeWidth={2} dot={{ fill: '#00D47E', r: 3 }} connectNulls={false} />
-            <Line dataKey="forecast" stroke="#22D3EE" strokeWidth={2} strokeDasharray="6 4" dot={{ fill: '#22D3EE', r: 3 }} connectNulls={false} />
+            <Line dataKey="actual" stroke="var(--color-accent-primary)" strokeWidth={2} dot={{ fill: 'var(--color-accent-primary)', r: 3 }} connectNulls={false} />
+            <Line dataKey="forecast" stroke="var(--color-accent-primary-light)" strokeWidth={2} strokeDasharray="6 4" dot={{ fill: 'var(--color-accent-primary-light)', r: 3 }} connectNulls={false} />
           </ComposedChart>
         </ResponsiveContainer>
       </div>

@@ -158,7 +158,7 @@ export default function GSTPage() {
       {/* Period Selector & BAS Worksheet */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* BAS Periods List */}
-        <div className="rounded-xl border border-border-subtle bg-bg-secondary p-5">
+        <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5">
           <h3 className="mb-3 text-sm font-semibold text-text-primary">BAS Periods</h3>
           <div className="space-y-2">
             {basPeriods.map((p) => (
@@ -180,7 +180,7 @@ export default function GSTPage() {
         </div>
 
         {/* BAS Worksheet */}
-        <div className="col-span-2 rounded-xl border border-border-subtle bg-bg-secondary p-5">
+        <div className="col-span-2 rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5">
           <h3 className="mb-4 text-sm font-semibold text-text-primary">
             BAS Worksheet — {selectedPeriod?.period_label || 'Select a period'}
           </h3>
@@ -268,7 +268,7 @@ export default function GSTPage() {
 
       {/* Quarterly Comparison Chart */}
       {chartData.length > 0 && (
-        <div className="rounded-xl border border-border-subtle bg-bg-secondary p-5">
+        <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5">
           <h3 className="mb-4 text-sm font-semibold text-text-primary">Quarterly GST Comparison</h3>
           <div className="h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -280,8 +280,8 @@ export default function GSTPage() {
                   contentStyle={{ backgroundColor: 'var(--color-bg-elevated)', border: '1px solid var(--color-border-subtle)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '12px' }}
                   formatter={(value) => formatCurrency(Number(value))}
                 />
-                <Bar dataKey="collected" name="Collected" fill="#FF4D6A" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="credits" name="Credits" fill="#00D47E" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="collected" name="Collected" fill="var(--color-accent-red)" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="credits" name="Credits" fill="var(--color-accent-green)" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

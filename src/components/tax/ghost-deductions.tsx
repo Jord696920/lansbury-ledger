@@ -109,7 +109,7 @@ export function GhostDeductions() {
   }
 
   return (
-    <div className="rounded-xl border border-border-subtle bg-bg-secondary p-5">
+    <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5">
       <div className="mb-4 flex items-start justify-between">
         <div className="flex items-center gap-2">
           <Ghost className="h-5 w-5 text-accent-purple" />

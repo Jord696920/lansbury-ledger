@@ -29,7 +29,7 @@ export function NewActionSheet({ open, onClose, onNewInvoice, onLogExpense, onSn
   return (
     <>
       <div className="fixed inset-0 z-50 backdrop-overlay" onClick={onClose} />
-      <div className="fixed bottom-[calc(64px+env(safe-area-inset-bottom,0px))] left-0 right-0 z-50 mx-4 mb-2 rounded-xl border border-border-subtle bg-bg-secondary shadow-xl sheet-up lg:bottom-auto lg:left-auto lg:right-6 lg:top-16 lg:mx-0 lg:w-72">
+      <div className="fixed bottom-[calc(64px+env(safe-area-inset-bottom,0px))] left-0 right-0 z-50 mx-4 mb-2 rounded-2xl border border-border-subtle bg-bg-primary shadow-sm shadow-xl sheet-up lg:bottom-auto lg:left-auto lg:right-6 lg:top-16 lg:mx-0 lg:w-72">
         <div className="p-2">
           {actions.map((action) => {
             const Icon = action.icon

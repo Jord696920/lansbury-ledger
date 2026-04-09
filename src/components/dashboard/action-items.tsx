@@ -77,7 +77,7 @@ export function ActionItems({ uncategorisedCount, overdueCount, anomalyCount, ba
 
   if (items.length === 0) {
     return (
-      <div className="rounded-xl border border-border-subtle bg-bg-secondary p-5">
+      <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5">
         <h3 className="mb-3 text-sm font-semibold text-text-primary">Action Items</h3>
         <p className="text-sm text-text-tertiary">All clear — nothing needs your attention right now.</p>
       </div>
@@ -85,7 +85,7 @@ export function ActionItems({ uncategorisedCount, overdueCount, anomalyCount, ba
   }
 
   return (
-    <div className="rounded-xl border border-border-subtle bg-bg-secondary p-5">
+    <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5">
       <h3 className="mb-3 text-sm font-semibold text-text-primary">Action Items</h3>
       <div className="space-y-2">
         {items.map((item, i) => (
@@ -93,7 +93,7 @@ export function ActionItems({ uncategorisedCount, overdueCount, anomalyCount, ba
             key={i}
             href={item.href}
             className={cn(
-              'flex items-center gap-3 rounded-lg border px-4 py-3 text-sm font-medium transition-all hover:brightness-110',
+              'flex items-center gap-3 rounded-lg border px-4 py-3 text-sm font-medium transition-all hover:opacity-90',
               variantStyles[item.variant]
             )}
           >

@@ -50,7 +50,7 @@ export default function SettingsPage() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center gap-2 rounded-lg bg-accent-green px-4 py-2.5 text-sm font-semibold text-bg-primary hover:brightness-110 disabled:opacity-50"
+          className="flex items-center gap-2 rounded-lg bg-accent-primary px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50"
         >
           <Save className="h-4 w-4" />
           {saving ? 'Saving...' : saved ? 'Saved!' : 'Save Changes'}
@@ -58,7 +58,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Business Details */}
-      <div className="rounded-xl border border-border-subtle bg-bg-secondary p-6">
+      <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-6">
         <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold text-text-primary">
           <Building2 className="h-4 w-4 text-accent-blue" />
           Business Details
@@ -89,7 +89,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Business Use Percentages */}
-      <div className="rounded-xl border border-border-subtle bg-bg-secondary p-6">
+      <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-6">
         <h2 className="mb-4 text-sm font-semibold text-text-primary">Default Business Use Percentages</h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {([
@@ -120,7 +120,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Invoice Settings */}
-      <div className="rounded-xl border border-border-subtle bg-bg-secondary p-6">
+      <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-6">
         <h2 className="mb-4 text-sm font-semibold text-text-primary">Invoice Settings</h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <div>
@@ -154,7 +154,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Banking */}
-      <div className="rounded-xl border border-border-subtle bg-bg-secondary p-6">
+      <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-6">
         <h2 className="mb-4 text-sm font-semibold text-text-primary">Banking Details (for invoices)</h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <div>

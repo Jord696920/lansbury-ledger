@@ -139,7 +139,7 @@ export default function TransactionsPage() {
         </div>
         <button
           onClick={() => setShowImport(!showImport)}
-          className="flex items-center gap-2 rounded-lg bg-accent-green px-4 py-2.5 text-sm font-semibold text-bg-primary hover:brightness-110"
+          className="flex items-center gap-2 rounded-lg bg-accent-primary px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90"
         >
           <Upload className="h-4 w-4" />
           Import CSV
@@ -207,7 +207,7 @@ export default function TransactionsPage() {
             ))}
           </select>
           {batchCategory && (
-            <button onClick={batchCategorise} className="rounded-md bg-accent-green px-3 py-1 text-xs font-semibold text-bg-primary">
+            <button onClick={batchCategorise} className="rounded-md bg-accent-primary px-3 py-1 text-xs font-semibold text-white">
               Apply
             </button>
           )}
@@ -221,7 +221,7 @@ export default function TransactionsPage() {
       )}
 
       {/* Transaction Table */}
-      <div className="rounded-xl border border-border-subtle bg-bg-secondary">
+      <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm">
         {loading ? (
           <div className="p-4">
             {Array.from({ length: 8 }).map((_, i) => (

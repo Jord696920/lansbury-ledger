@@ -115,7 +115,7 @@ export function CSVImport({ onImportComplete }: CSVImportProps) {
 
       {/* Preview */}
       {parsed && (
-        <div className="rounded-xl border border-border-subtle bg-bg-secondary">
+        <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm">
           <div className="flex items-center justify-between border-b border-border-subtle px-4 py-3">
             <div className="flex items-center gap-3">
               <FileText className="h-5 w-5 text-accent-blue" />
@@ -193,7 +193,7 @@ export function CSVImport({ onImportComplete }: CSVImportProps) {
             <button
               onClick={importTransactions}
               disabled={importing || newCount === 0}
-              className="flex items-center gap-2 rounded-lg bg-accent-green px-4 py-2 text-sm font-semibold text-bg-primary transition-all hover:brightness-110 disabled:opacity-50"
+              className="flex items-center gap-2 rounded-lg bg-accent-primary px-4 py-2 text-sm font-semibold text-white transition-all hover:opacity-90 disabled:opacity-50"
             >
               {importing ? (
                 <>Importing...</>

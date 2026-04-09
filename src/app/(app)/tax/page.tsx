@@ -147,7 +147,7 @@ export default function TaxPage() {
       {/* Tax Breakdown — stacked on mobile */}
       <div className="grid grid-cols-1 gap-4 lg:gap-6 lg:grid-cols-2">
         {/* Detailed Breakdown */}
-        <div className="rounded-xl border border-border-subtle bg-bg-secondary p-5">
+        <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5">
           <h3 className="mb-4 text-sm font-semibold text-text-primary">Tax Calculation Breakdown</h3>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
@@ -269,7 +269,7 @@ export default function TaxPage() {
       </div>
 
       {/* Vehicle Method Comparison */}
-      <div className="rounded-xl border border-border-subtle bg-bg-secondary p-5">
+      <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5">
         <h3 className="mb-1 text-sm font-semibold text-text-primary">
           <Car className="mb-0.5 mr-1.5 inline h-4 w-4 text-accent-blue" />
           Vehicle Expense Method Comparison
@@ -285,7 +285,7 @@ export default function TaxPage() {
             <div className="mb-2 flex items-center justify-between">
               <h4 className="text-sm font-semibold text-text-primary">Cents per Km</h4>
               {vehicleMethodWinner === 'cents_per_km' && (
-                <span className="rounded-full bg-accent-green px-2 py-0.5 text-[10px] font-bold text-bg-primary">BETTER</span>
+                <span className="rounded-full bg-accent-primary px-2 py-0.5 text-[10px] font-bold text-white">BETTER</span>
               )}
             </div>
             <div className="mb-3">
@@ -309,7 +309,7 @@ export default function TaxPage() {
             <div className="mb-2 flex items-center justify-between">
               <h4 className="text-sm font-semibold text-text-primary">Logbook / Actual Cost</h4>
               {vehicleMethodWinner === 'logbook' && (
-                <span className="rounded-full bg-accent-green px-2 py-0.5 text-[10px] font-bold text-bg-primary">BETTER</span>
+                <span className="rounded-full bg-accent-primary px-2 py-0.5 text-[10px] font-bold text-white">BETTER</span>
               )}
             </div>
             <div className="space-y-1 text-xs text-text-secondary">
@@ -329,7 +329,7 @@ export default function TaxPage() {
       </div>
 
       {/* Tax Bracket Visualisation */}
-      <div className="rounded-xl border border-border-subtle bg-bg-secondary p-5">
+      <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5">
         <h3 className="mb-4 text-sm font-semibold text-text-primary">Tax Bracket Position</h3>
         <div className="space-y-2">
           {TAX_BRACKETS_FY2526.map((bracket, i) => {

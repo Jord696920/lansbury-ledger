@@ -251,7 +251,7 @@ export default function TimeMachinePage() {
       </div>
 
       {/* Key insight */}
-      <div className="rounded-xl border border-border-subtle bg-bg-secondary p-5">
+      <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5">
         <h3 className="mb-2 text-sm font-semibold text-text-primary">Key Insight</h3>
         <p className="text-sm text-text-secondary">
           {revDiff > 0 ? (

@@ -52,7 +52,7 @@ export function RodSays() {
           </div>
           <button
             onClick={fetchBrief}
-            className="flex items-center gap-1.5 rounded-lg bg-accent-purple px-3 py-1.5 text-xs font-semibold text-white transition-all hover:brightness-110 active:scale-95"
+            className="flex items-center gap-1.5 rounded-lg bg-accent-purple px-3 py-1.5 text-xs font-semibold text-white transition-all hover:opacity-90 active:scale-95"
           >
             <Sparkles className="h-3.5 w-3.5" />
             Generate Brief

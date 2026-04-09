@@ -129,7 +129,7 @@ export function AuditRiskScore({ revenue, deductions }: AuditRiskScoreProps) {
   useEffect(() => { calculate() }, [calculate])
 
   const scoreColor = score <= 30 ? 'text-accent-green' : score <= 60 ? 'text-accent-amber' : 'text-accent-red'
-  const ringColorHex = score <= 30 ? '#00D47E' : score <= 60 ? '#FFB020' : '#FF4D6A'
+  const ringColorHex = score <= 30 ? 'var(--color-accent-green)' : score <= 60 ? 'var(--color-accent-amber)' : 'var(--color-accent-red)'
   const label = score <= 30 ? 'Low Risk' : score <= 60 ? 'Moderate Risk' : 'High Risk'
 
   const radius = 44
@@ -141,7 +141,7 @@ export function AuditRiskScore({ revenue, deductions }: AuditRiskScoreProps) {
   }
 
   return (
-    <div className="rounded-xl border border-border-subtle bg-bg-secondary p-5">
+    <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5">
       <div className="mb-4 flex items-start gap-5">
         {/* Ring gauge */}
         <div className="relative shrink-0">

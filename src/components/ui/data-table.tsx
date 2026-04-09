@@ -93,7 +93,7 @@ export function DataTable<T extends Record<string, unknown>>({
 
   if (loading) {
     return (
-      <div className="rounded-xl border border-border-subtle bg-bg-secondary">
+      <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm">
         <div className="p-4">
           <div className="skeleton mb-4 h-10 w-full" />
           {Array.from({ length: 5 }).map((_, i) => (
@@ -105,7 +105,7 @@ export function DataTable<T extends Record<string, unknown>>({
   }
 
   return (
-    <div className="rounded-xl border border-border-subtle bg-bg-secondary">
+    <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm">
       {/* Toolbar */}
       {(searchable || exportable) && (
         <div className="flex items-center justify-between border-b border-border-subtle px-4 py-3">

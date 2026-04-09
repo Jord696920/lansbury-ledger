@@ -113,7 +113,7 @@ export default function InvoicesPage() {
         </div>
         <button
           onClick={() => { setDuplicateData(undefined); setShowForm(true) }}
-          className="hidden items-center gap-2 rounded-lg bg-accent-green px-4 py-2.5 text-sm font-semibold text-bg-primary hover:brightness-110 lg:flex"
+          className="hidden items-center gap-2 rounded-lg bg-accent-primary px-4 py-2.5 text-sm font-semibold text-white hover:opacity-90 lg:flex"
         >
           <Plus className="h-4 w-4" />
           New Invoice
@@ -122,21 +122,21 @@ export default function InvoicesPage() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-3 lg:gap-4">
-        <div className="rounded-xl border border-border-subtle bg-bg-secondary p-3 lg:p-4">
+        <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-3 lg:p-4">
           <div className="flex items-center gap-1.5 text-[10px] text-text-tertiary lg:text-xs">
             <DollarSign className="h-3 w-3 lg:h-3.5 lg:w-3.5" />
             Outstanding
           </div>
           <p className="mt-1 font-financial text-base font-bold text-text-primary lg:text-xl">{formatCurrency(totalOutstanding)}</p>
         </div>
-        <div className="rounded-xl border border-border-subtle bg-bg-secondary p-3 lg:p-4">
+        <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-3 lg:p-4">
           <div className="flex items-center gap-1.5 text-[10px] text-accent-red lg:text-xs">
             <AlertCircle className="h-3 w-3 lg:h-3.5 lg:w-3.5" />
             Overdue
           </div>
           <p className="mt-1 font-financial text-base font-bold text-accent-red lg:text-xl">{formatCurrency(totalOverdue)}</p>
         </div>
-        <div className="col-span-2 rounded-xl border border-border-subtle bg-bg-secondary p-3 lg:col-span-1 lg:p-4">
+        <div className="col-span-2 rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-3 lg:col-span-1 lg:p-4">
           <div className="flex items-center gap-1.5 text-[10px] text-accent-green lg:text-xs">
             <Clock className="h-3 w-3 lg:h-3.5 lg:w-3.5" />
             Paid This Month
@@ -200,7 +200,7 @@ export default function InvoicesPage() {
                 onClick={() => handleInvoiceClick(inv)}
                 role="button"
                 tabIndex={0}
-                className="flex cursor-pointer items-center justify-between rounded-xl border border-border-subtle bg-bg-secondary px-4 py-3 active:scale-[0.98] transition-transform"
+                className="flex cursor-pointer items-center justify-between rounded-2xl border border-border-subtle bg-bg-primary shadow-sm px-4 py-3 active:scale-[0.98] transition-transform"
               >
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
@@ -235,7 +235,7 @@ export default function InvoicesPage() {
           </div>
 
           {/* Desktop table */}
-          <div className="hidden rounded-xl border border-border-subtle bg-bg-secondary lg:block">
+          <div className="hidden rounded-2xl border border-border-subtle bg-bg-primary shadow-sm lg:block">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>

@@ -113,7 +113,7 @@ export default function DashboardPage() {
   const radius = 58
   const circumference = 2 * Math.PI * radius
   const strokeDashoffset = circumference - (Math.min(monthProgress, 100) / 100) * circumference
-  const ringColor = monthProgress >= 100 ? '#00D47E' : monthProgress >= 60 ? '#FFB020' : '#6B8AFF'
+  const ringColor = monthProgress >= 100 ? 'var(--color-accent-green)' : monthProgress >= 60 ? 'var(--color-accent-amber)' : 'var(--color-accent-primary)'
 
   return (
     <div className="space-y-4 lg:space-y-6">
@@ -135,7 +135,7 @@ export default function DashboardPage() {
       </div>
 
       {/* ROW 1 — Monthly Target Hero */}
-      <div className="rounded-xl border border-border-subtle bg-bg-secondary p-4 lg:p-6" data-stagger>
+      <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5 lg:p-6">
         <div className="flex flex-col items-center gap-4 lg:flex-row lg:gap-8">
           {/* Ring — smaller on mobile */}
           <div className="relative shrink-0">
@@ -229,7 +229,7 @@ export default function DashboardPage() {
       {/* ROW 4 — Action Items + EOFY */}
       <div className="grid grid-cols-1 gap-3 lg:gap-4 lg:grid-cols-2">
         {/* Needs Attention */}
-        <div className="rounded-xl border border-border-subtle bg-bg-secondary p-4 lg:p-5">
+        <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-4 lg:p-5">
           <h3 className="mb-3 text-sm font-semibold text-text-primary">Needs Attention</h3>
           <div className="space-y-2">
             {thisMonthInvoices.length === 0 && (
@@ -239,7 +239,7 @@ export default function DashboardPage() {
               </div>
             )}
             {basDueDays <= 30 && (
-              <Link href="/gst" className="flex items-center justify-between rounded-lg bg-surface-blue px-3 py-2.5 text-xs text-accent-primary hover:brightness-110">
+              <Link href="/gst" className="flex items-center justify-between rounded-lg bg-surface-blue px-3 py-2.5 text-xs text-accent-primary hover:opacity-90">
                 <div className="flex items-center gap-3">
                   <Receipt className="h-4 w-4 shrink-0" />
                   BAS Q3 due {format(basDueDate, 'd MMMM')} ({basDueDays} days)
@@ -248,7 +248,7 @@ export default function DashboardPage() {
               </Link>
             )}
             {eofyDays <= 120 && (
-              <Link href="/tax" className="flex items-center justify-between rounded-lg bg-surface-amber px-3 py-2.5 text-xs text-accent-amber hover:brightness-110">
+              <Link href="/tax" className="flex items-center justify-between rounded-lg bg-surface-amber px-3 py-2.5 text-xs text-accent-amber hover:opacity-90">
                 <div className="flex items-center gap-3">
                   <CalendarClock className="h-4 w-4 shrink-0" />
                   EOFY in {eofyDays} days — review tax position
@@ -272,7 +272,7 @@ export default function DashboardPage() {
 
         {/* EOFY Countdown */}
         {eofyDays <= 120 && (
-          <div className="rounded-xl border border-border-subtle bg-bg-secondary p-5">
+          <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5">
             <h3 className="mb-3 text-sm font-semibold text-text-primary">EOFY 2025-26</h3>
             <div className="mb-4 flex items-baseline gap-3">
               <span className={`font-financial text-4xl font-bold ${eofyColor}`}>{eofyDays}</span>
@@ -299,7 +299,7 @@ export default function DashboardPage() {
               <Link href="/deductions" className="btn-press flex-1 rounded-lg border border-border-subtle px-3 py-2 text-center text-xs font-medium text-text-secondary hover:bg-bg-elevated">
                 Review Deductions
               </Link>
-              <Link href="/tax" className="btn-press flex-1 rounded-lg bg-accent-primary px-3 py-2 text-center text-xs font-semibold text-white hover:brightness-110">
+              <Link href="/tax" className="btn-press flex-1 rounded-lg bg-accent-primary px-3 py-2 text-center text-xs font-semibold text-white hover:opacity-90">
                 Tax Position
               </Link>
             </div>
