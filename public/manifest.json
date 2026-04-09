@@ -1,0 +1,13 @@
+{
+  "name": "Rod the Accountant",
+  "short_name": "Rod",
+  "description": "Your books. Your control.",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#0B0F1A",
+  "theme_color": "#0B0F1A",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

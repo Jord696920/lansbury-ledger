@@ -1,26 +1,294 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* ── Design Tokens: Dark (Midnight Navy — default) ─────── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg-primary: #0B0F1A;
+  --color-bg-secondary: #111827;
+  --color-bg-elevated: #1E2640;
+  --color-bg-hover: #253050;
+  --color-border-subtle: #1E2640;
+  --color-border-active: #2A3556;
+  --color-text-primary: #E8ECF4;
+  --color-text-secondary: #7A839B;
+  --color-text-tertiary: #4A5168;
+  --color-accent-primary: #6B8AFF;
+  --color-accent-green: #00D47E;
+  --color-accent-red: #FF4D6A;
+  --color-accent-amber: #FFB020;
+  --color-accent-purple: #A78BFA;
+  --color-accent-blue: #6B8AFF;
+  --color-accent-cyan: #22D3EE;
+  --color-surface-green: rgba(0, 212, 126, 0.08);
+  --color-surface-red: rgba(255, 77, 106, 0.08);
+  --color-surface-blue: rgba(107, 138, 255, 0.08);
+  --color-surface-amber: rgba(255, 176, 32, 0.08);
+  --color-surface-purple: rgba(167, 139, 250, 0.08);
+
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ── Light Mode Override (Clean Day) ───────────────────── */
+.light {
+  --color-bg-primary: #FFFFFF;
+  --color-bg-secondary: #F8F9FC;
+  --color-bg-elevated: #F0F2F7;
+  --color-bg-hover: #E8EBF2;
+  --color-border-subtle: #E2E5EE;
+  --color-border-active: #C8CDD8;
+  --color-text-primary: #0B0F1A;
+  --color-text-secondary: #5A6178;
+  --color-text-tertiary: #8A90A2;
+  --color-accent-primary: #4A6AE5;
+  --color-accent-green: #059669;
+  --color-accent-red: #DC2626;
+  --color-accent-amber: #D97706;
+  --color-accent-purple: #7C3AED;
+  --color-accent-blue: #4A6AE5;
+  --color-accent-cyan: #0891B2;
+  --color-surface-green: rgba(5, 150, 105, 0.06);
+  --color-surface-red: rgba(220, 38, 38, 0.06);
+  --color-surface-blue: rgba(74, 106, 229, 0.06);
+  --color-surface-amber: rgba(217, 119, 6, 0.06);
+  --color-surface-purple: rgba(124, 58, 237, 0.06);
+}
+
+/* ── Base ─────────────────────────────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-subtle) transparent;
+}
+*:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+html {
+  color-scheme: dark;
+}
+html.light {
+  color-scheme: light;
+}
+body {
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ── Typography ───────────────────────────────────────── */
+.font-financial {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+/* ── Stagger entrance (applied via data-stagger attribute) */
+[data-stagger] {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: staggerIn 0.4s ease-out forwards;
+}
+@keyframes staggerIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Card ─────────────────────────────────────────────── */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  border-color: var(--color-border-active);
+}
+.light .card-hover:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* ── Button press ─────────────────────────────────────── */
+.btn-press {
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.btn-press:active {
+  transform: scale(0.98);
+}
+
+/* ── Pulse attention ──────────────────────────────────── */
+@keyframes gentlePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+.pulse-attention {
+  animation: gentlePulse 2s ease-in-out infinite;
+}
+
+/* ── Slide-in panel ───────────────────────────────────── */
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0.5; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.slide-in {
+  animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Toast ────────────────────────────────────────────── */
+@keyframes toastIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.toast-in {
+  position: relative;
+  animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Skeleton shimmer ─────────────────────────────────── */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-secondary) 25%,
+    var(--color-bg-elevated) 50%,
+    var(--color-bg-secondary) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+/* ── Fade-up entrance (page transition) ───────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.page-enter {
+  animation: fadeUp 0.3s ease-out;
+}
+
+/* ── Backdrop blur ────────────────────────────────────── */
+.backdrop-overlay {
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+.light .backdrop-overlay {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* ── Table row hover (left accent border) ─────────────── */
+.row-hover {
+  position: relative;
+  transition: background-color 0.15s ease;
+}
+.row-hover::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--color-accent-green);
+  border-radius: 0 2px 2px 0;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.row-hover:hover::before {
+  opacity: 1;
+}
+
+/* ── Theme toggle transition ──────────────────────────── */
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.15s ease, box-shadow 0.3s ease !important;
+}
+
+/* ── Custom scrollbar (webkit) ────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border-subtle); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-border-active); }
+
+/* ── Mobile-First Layout ─────────────────────────────── */
+
+/* Bottom sheet slide-up animation */
+@keyframes sheetUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes sheetDown {
+  from { transform: translateY(0); }
+  to { transform: translateY(100%); }
+}
+.sheet-up {
+  animation: sheetUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.sheet-down {
+  animation: sheetDown 0.2s ease-in forwards;
+}
+
+/* Pull to refresh spinner */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.animate-spin {
+  animation: spin 0.8s linear infinite;
+}
+
+/* Safe area padding for iOS notch / home indicator */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.safe-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* Prevent overscroll bounce on iOS in standalone mode */
+@media (display-mode: standalone) {
+  body {
+    overscroll-behavior: none;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Touch target minimum size helper */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Hide scrollbar (for horizontal chip scrolls) */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Scale on press — used on mobile buttons */
+.active\:scale-98:active {
+  transform: scale(0.98);
+}
+
+/* Mobile card press effect (replaces hover on touch) */
+@media (hover: none) {
+  .card-hover:active {
+    transform: scale(0.98);
+    border-color: var(--color-border-active);
+  }
+  .card-hover:hover {
+    transform: none;
+    box-shadow: none;
+  }
 }
