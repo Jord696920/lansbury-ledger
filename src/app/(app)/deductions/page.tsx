@@ -41,7 +41,7 @@ export default function DeductionsPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search deduction categories..."
-          className="w-full rounded-lg border border-border-subtle bg-bg-secondary py-2.5 pl-9 pr-4 text-sm text-text-primary placeholder-text-tertiary outline-none focus:border-border-active"
+          className="w-full rounded-lg border border-border-subtle bg-bg-secondary py-2.5 pl-9 pr-4 text-sm text-text-primary placeholder-text-tertiary outline-none focus:border-accent-primary"
         />
       </div>
 

@@ -81,7 +81,7 @@ export default function SettingsPage() {
                 type="text"
                 value={String(profile[field] ?? '')}
                 onChange={(e) => updateField(field, e.target.value)}
-                className="w-full rounded-lg border border-border-subtle bg-bg-primary px-3 py-2.5 text-sm text-text-primary outline-none focus:border-border-active"
+                className="w-full rounded-lg border border-border-subtle bg-bg-primary px-3 py-2.5 text-sm text-text-primary outline-none focus:border-accent-primary"
               />
             </div>
           ))}
@@ -110,7 +110,7 @@ export default function SettingsPage() {
                   onChange={(e) => updateField(field, Number(e.target.value))}
                   min="0"
                   max="100"
-                  className="w-full rounded-lg border border-border-subtle bg-bg-primary px-3 py-2.5 font-financial text-sm text-text-primary outline-none focus:border-border-active"
+                  className="w-full rounded-lg border border-border-subtle bg-bg-primary px-3 py-2.5 font-financial text-sm text-text-primary outline-none focus:border-accent-primary"
                 />
                 <span className="text-sm text-text-tertiary">%</span>
               </div>
@@ -129,7 +129,7 @@ export default function SettingsPage() {
               type="text"
               value={profile.invoice_prefix}
               onChange={(e) => updateField('invoice_prefix', e.target.value)}
-              className="w-full rounded-lg border border-border-subtle bg-bg-primary px-3 py-2.5 text-sm text-text-primary outline-none focus:border-border-active"
+              className="w-full rounded-lg border border-border-subtle bg-bg-primary px-3 py-2.5 text-sm text-text-primary outline-none focus:border-accent-primary"
             />
           </div>
           <div>
@@ -138,7 +138,7 @@ export default function SettingsPage() {
               type="number"
               value={profile.invoice_next_number}
               onChange={(e) => updateField('invoice_next_number', Number(e.target.value))}
-              className="w-full rounded-lg border border-border-subtle bg-bg-primary px-3 py-2.5 font-financial text-sm text-text-primary outline-none focus:border-border-active"
+              className="w-full rounded-lg border border-border-subtle bg-bg-primary px-3 py-2.5 font-financial text-sm text-text-primary outline-none focus:border-accent-primary"
             />
           </div>
           <div>
@@ -147,7 +147,7 @@ export default function SettingsPage() {
               type="number"
               value={profile.payment_terms_days}
               onChange={(e) => updateField('payment_terms_days', Number(e.target.value))}
-              className="w-full rounded-lg border border-border-subtle bg-bg-primary px-3 py-2.5 font-financial text-sm text-text-primary outline-none focus:border-border-active"
+              className="w-full rounded-lg border border-border-subtle bg-bg-primary px-3 py-2.5 font-financial text-sm text-text-primary outline-none focus:border-accent-primary"
             />
           </div>
         </div>
@@ -163,7 +163,7 @@ export default function SettingsPage() {
               type="text"
               value={profile.bank_name ?? ''}
               onChange={(e) => updateField('bank_name', e.target.value)}
-              className="w-full rounded-lg border border-border-subtle bg-bg-primary px-3 py-2.5 text-sm text-text-primary outline-none focus:border-border-active"
+              className="w-full rounded-lg border border-border-subtle bg-bg-primary px-3 py-2.5 text-sm text-text-primary outline-none focus:border-accent-primary"
             />
           </div>
           <div>
@@ -172,7 +172,7 @@ export default function SettingsPage() {
               type="text"
               value={profile.bank_bsb ?? ''}
               onChange={(e) => updateField('bank_bsb', e.target.value)}
-              className="w-full rounded-lg border border-border-subtle bg-bg-primary px-3 py-2.5 font-financial text-sm text-text-primary outline-none focus:border-border-active"
+              className="w-full rounded-lg border border-border-subtle bg-bg-primary px-3 py-2.5 font-financial text-sm text-text-primary outline-none focus:border-accent-primary"
             />
           </div>
           <div>
@@ -181,7 +181,7 @@ export default function SettingsPage() {
               type="text"
               value={profile.bank_account ?? ''}
               onChange={(e) => updateField('bank_account', e.target.value)}
-              className="w-full rounded-lg border border-border-subtle bg-bg-primary px-3 py-2.5 font-financial text-sm text-text-primary outline-none focus:border-border-active"
+              className="w-full rounded-lg border border-border-subtle bg-bg-primary px-3 py-2.5 font-financial text-sm text-text-primary outline-none focus:border-accent-primary"
             />
           </div>
         </div>
