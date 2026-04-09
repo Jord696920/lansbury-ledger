@@ -3,15 +3,15 @@
 
 /** Chart colour tokens — reference CSS custom properties */
 export const CHART = {
-  grid: '#2A2A3C',
-  axis: '#2A2A3C',
-  text: '#8888A0',
+  grid: 'var(--color-border-subtle)',
+  axis: 'var(--color-border-subtle)',
+  text: 'var(--color-text-tertiary)',
   textSize: 11,
   tooltip: {
-    bg: '#1A1A28',
-    border: '1px solid #2A2A3C',
-    radius: '8px',
-    color: '#F0F0F5',
+    backgroundColor: 'var(--color-bg-elevated)',
+    border: '1px solid var(--color-border-subtle)',
+    borderRadius: '8px',
+    color: 'var(--color-text-primary)',
     fontSize: '12px',
   },
   colors: {

@@ -273,11 +273,11 @@ export default function GSTPage() {
           <div className="h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#2A2A3C" vertical={false} />
-                <XAxis dataKey="period" tick={{ fill: '#8888A0', fontSize: 11 }} axisLine={{ stroke: '#2A2A3C' }} tickLine={false} />
-                <YAxis tick={{ fill: '#8888A0', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-subtle)" vertical={false} />
+                <XAxis dataKey="period" tick={{ fill: 'var(--color-text-tertiary)', fontSize: 11 }} axisLine={{ stroke: 'var(--color-border-subtle)' }} tickLine={false} />
+                <YAxis tick={{ fill: 'var(--color-text-tertiary)', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#1A1A28', border: '1px solid #2A2A3C', borderRadius: '8px', color: '#F0F0F5', fontSize: '12px' }}
+                  contentStyle={{ backgroundColor: 'var(--color-bg-elevated)', border: '1px solid var(--color-border-subtle)', borderRadius: '8px', color: 'var(--color-text-primary)', fontSize: '12px' }}
                   formatter={(value) => formatCurrency(Number(value))}
                 />
                 <Bar dataKey="collected" name="Collected" fill="#FF4D6A" radius={[4, 4, 0, 0]} />
