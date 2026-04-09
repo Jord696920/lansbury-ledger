@@ -233,7 +233,7 @@ export default function HouseholdPage() {
       </div>
 
       {/* Bethany's quick summary */}
-      <div className="rounded-xl border border-accent-pink/20 bg-bg-secondary p-5">
+      <div className="rounded-xl border border-accent-pink/20 bg-surface-pink p-5">
         <div className="flex items-center gap-2">
           <Heart className="h-4 w-4 text-accent-pink" />
           <h3 className="text-sm font-semibold text-text-primary">The Simple Version</h3>
