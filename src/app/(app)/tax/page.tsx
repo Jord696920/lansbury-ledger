@@ -188,7 +188,7 @@ export default function TaxPage() {
         </div>
 
         {/* What If Simulator */}
-        <div className="rounded-xl border border-accent-purple/20 bg-bg-secondary p-4 lg:p-5">
+        <div className="rounded-2xl border border-border-subtle bg-surface-purple p-4 lg:p-5">
           <h3 className="mb-1 text-sm font-semibold text-text-primary">
             <Zap className="mb-0.5 mr-1.5 inline h-4 w-4 text-accent-purple" />
             What If Simulator
@@ -407,7 +407,7 @@ export default function TaxPage() {
 
       {/* EOFY Checklist */}
       {eofyDays <= 120 && (
-        <div className="rounded-xl border border-accent-amber/20 bg-bg-secondary p-5">
+        <div className="rounded-2xl border border-border-subtle bg-surface-amber p-5 shadow-sm">
           <h3 className="mb-3 text-sm font-semibold text-accent-amber">
             EOFY 2025-26 Checklist — {eofyDays} Days Remaining
           </h3>

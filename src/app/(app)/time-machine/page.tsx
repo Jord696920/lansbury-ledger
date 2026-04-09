@@ -204,7 +204,7 @@ export default function TimeMachinePage() {
       </div>
 
       {/* What-If overlay */}
-      <div className="rounded-xl border border-accent-purple/20 bg-bg-secondary p-5">
+      <div className="rounded-2xl border border-border-subtle bg-surface-purple p-5">
         <h3 className="mb-1 text-sm font-semibold text-text-primary">
           <Clock className="mb-0.5 mr-1.5 inline h-4 w-4 text-accent-purple" />
           What If — Time Machine Scenarios

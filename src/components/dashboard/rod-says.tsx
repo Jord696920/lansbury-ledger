@@ -41,7 +41,7 @@ export function RodSays() {
   // Not yet loaded — show prompt to generate
   if (!brief && !loading && !error) {
     return (
-      <div className="rounded-xl border border-accent-purple/20 bg-bg-secondary p-5">
+      <div className="rounded-2xl border border-border-subtle bg-surface-purple p-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <MessageSquare className="h-5 w-5 text-accent-purple" />
@@ -63,7 +63,7 @@ export function RodSays() {
   }
 
   return (
-    <div className="rounded-xl border border-accent-purple/20 bg-bg-secondary p-5">
+    <div className="rounded-2xl border border-border-subtle bg-surface-purple p-5">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <MessageSquare className="h-5 w-5 text-accent-purple" />

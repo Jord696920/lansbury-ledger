@@ -33,13 +33,13 @@ export default function ReportsPage() {
               key={report.id}
               onClick={() => setSelectedReport(report.id)}
               className={cn(
-                'card-hover flex flex-col items-start rounded-xl border p-5 text-left transition-all',
+                'card-hover flex flex-col items-start rounded-2xl border p-5 text-left shadow-sm transition-all',
                 selectedReport === report.id
-                  ? 'border-accent-blue bg-surface-blue'
-                  : 'border-border-subtle bg-bg-secondary hover:border-border-active'
+                  ? 'border-accent-primary bg-accent-primary-bg'
+                  : 'border-border-subtle bg-bg-primary hover:border-border-active'
               )}
             >
-              <Icon className={cn('mb-3 h-6 w-6', selectedReport === report.id ? 'text-accent-blue' : 'text-text-tertiary')} />
+              <Icon className={cn('mb-3 h-6 w-6', selectedReport === report.id ? 'text-accent-primary' : 'text-text-tertiary')} strokeWidth={1.5} />
               <h3 className="text-sm font-semibold text-text-primary">{report.name}</h3>
               <p className="mt-1 text-[11px] text-text-tertiary">{report.description}</p>
             </button>
