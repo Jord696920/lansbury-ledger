@@ -99,7 +99,7 @@ export function RodSays() {
             {brief.brief}
           </div>
           {brief.context && (
-            <div className="mt-3 flex gap-4 border-t border-border-subtle pt-3 text-[10px] text-text-tertiary">
+            <div className="mt-3 flex gap-4 border-t border-border-subtle pt-3 font-financial text-[10px] text-text-tertiary">
               <span>YTD: {formatCurrency(brief.context.ytdRevenue)}</span>
               <span>Last 3mo: {formatCurrency(brief.context.last3moRevenue)}</span>
               {brief.context.eofyDays <= 120 && (

@@ -173,7 +173,7 @@ export function InvoiceForm({ onClose, onSaved, duplicate }: InvoiceFormProps) {
           <p className="mb-2 font-financial text-4xl font-bold text-accent-green">
             {formatCurrency(qAmount)}
           </p>
-          <p className="mb-8 text-xs text-text-tertiary">
+          <p className="mb-8 font-financial text-xs text-text-tertiary">
             Ex GST: {formatCurrency(qExGst)} · GST: {formatCurrency(qGst)}
           </p>
 

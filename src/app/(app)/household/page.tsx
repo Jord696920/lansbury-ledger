@@ -248,8 +248,8 @@ export default function HouseholdPage() {
           <p>
             With household costs of <span className="font-financial font-semibold text-accent-amber">{formatCurrency(totalMonthlyCosts)}/month</span>,
             {monthlyFreedom >= 0
-              ? <> there&apos;s <span className="font-semibold text-accent-green">{formatCurrency(monthlyFreedom)}</span> left over each month.</>
-              : <> we&apos;re <span className="font-semibold text-accent-red">{formatCurrency(Math.abs(monthlyFreedom))}</span> short each month.</>
+              ? <> there&apos;s <span className="font-financial font-semibold text-accent-green">{formatCurrency(monthlyFreedom)}</span> left over each month.</>
+              : <> we&apos;re <span className="font-financial font-semibold text-accent-red">{formatCurrency(Math.abs(monthlyFreedom))}</span> short each month.</>
             }
           </p>
           {eofyDays <= 120 && (

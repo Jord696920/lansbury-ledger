@@ -324,7 +324,7 @@ export default function TaxPage() {
         </div>
 
         <p className="mt-3 text-xs text-accent-green">
-          {vehicleMethodWinner === 'logbook' ? 'Logbook' : 'Cents per km'} method saves you {formatCurrency(vehicleSaving)} this year
+          {vehicleMethodWinner === 'logbook' ? 'Logbook' : 'Cents per km'} method saves you <span className="font-financial">{formatCurrency(vehicleSaving)}</span> this year
         </p>
       </div>
 

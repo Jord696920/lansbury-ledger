@@ -155,7 +155,7 @@ export function ExpenseLogger({ open, onClose, onSaved }: ExpenseLoggerProps) {
             />
           </div>
           {numericAmount > 0 && (
-            <div className="mt-2 flex items-center justify-between px-1 text-xs text-text-tertiary">
+            <div className="mt-2 flex items-center justify-between px-1 font-financial text-xs text-text-tertiary">
               <span>GST: {formatCurrency(gst)}</span>
               <span>Business claim: {formatCurrency(businessAmount)} ({bizPct}%)</span>
             </div>

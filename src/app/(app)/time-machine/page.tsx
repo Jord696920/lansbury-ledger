@@ -239,7 +239,7 @@ export default function TimeMachinePage() {
 
         {scenarioExpenses > 0 && (
           <div className="mt-3 flex items-center gap-2">
-            <span className="text-xs text-text-tertiary">Active scenario adds {formatCurrency(scenarioExpenses)} in deductions</span>
+            <span className="font-financial text-xs text-text-tertiary">Active scenario adds {formatCurrency(scenarioExpenses)} in deductions</span>
             <button
               onClick={() => setScenarioExpenses(0)}
               className="rounded bg-bg-elevated px-2 py-0.5 text-[10px] text-text-secondary hover:text-text-primary"
@@ -256,16 +256,16 @@ export default function TimeMachinePage() {
         <p className="text-sm text-text-secondary">
           {revDiff > 0 ? (
             <>
-              Revenue is tracking <span className="font-semibold text-accent-green">{formatCurrency(revDiff)} higher</span> than
+              Revenue is tracking <span className="font-financial font-semibold text-accent-green">{formatCurrency(revDiff)} higher</span> than
               last year. {taxDiff > 0
-                ? <>But tax will also be <span className="font-semibold text-accent-red">{formatCurrency(taxDiff)} more</span> — consider maximising deductions before June 30.</>
+                ? <>But tax will also be <span className="font-financial font-semibold text-accent-red">{formatCurrency(taxDiff)} more</span> — consider maximising deductions before June 30.</>
                 : <>And thanks to the new FY2025-26 brackets, your tax position has improved.</>
               }
             </>
           ) : revDiff < 0 ? (
             <>
-              Revenue is tracking <span className="font-semibold text-accent-amber">{formatCurrency(Math.abs(revDiff))} lower</span> than
-              last year with {12 - monthsElapsed} months remaining. You need {formatCurrency((FY2425.revenue - fy2526Revenue) / Math.max(1, 12 - monthsElapsed))}/month to match last year.
+              Revenue is tracking <span className="font-financial font-semibold text-accent-amber">{formatCurrency(Math.abs(revDiff))} lower</span> than
+              last year with {12 - monthsElapsed} months remaining. You need <span className="font-financial">{formatCurrency((FY2425.revenue - fy2526Revenue) / Math.max(1, 12 - monthsElapsed))}/month</span> to match last year.
             </>
           ) : (
             <>Revenue is tracking exactly in line with last year.</>
