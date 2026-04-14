@@ -45,6 +45,7 @@ export function BottomTabs({ onNewTap }: BottomTabsProps) {
     { href: '/deductions', label: 'Deductions' },
     { href: '/reports', label: 'Reports' },
     { href: '/household', label: 'Household' },
+    { href: '/claims', label: 'Claims' },
     { href: '/time-machine', label: 'Time Machine' },
     { href: '/settings', label: 'Settings' },
   ]

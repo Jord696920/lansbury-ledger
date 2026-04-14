@@ -1,7 +1,7 @@
 import { supabase } from './supabase'
 import { getFYDates } from './utils'
 import { TAX_BRACKETS_FY2526, SBITO_RATE, SBITO_CAP } from './constants'
-import type { Account, Transaction, Invoice, BASPeriod, ComplianceEvent, BusinessProfile, Anomaly } from '@/types/database'
+import type { Account, Transaction, Invoice, BASPeriod, ComplianceEvent, BusinessProfile, Anomaly, HistoricalPeriod, HistoricalExpenseCategory, Claim } from '@/types/database'
 
 export async function getAccounts(): Promise<Account[]> {
   const { data, error } = await supabase
@@ -87,6 +87,37 @@ export async function getAnomalies(dismissed = false): Promise<Anomaly[]> {
     .order('created_at', { ascending: false })
   if (error) throw new Error(`Failed to fetch anomalies: ${error.message}`)
   return data as Anomaly[]
+}
+
+export async function getHistoricalPeriods(fy: string, periodType?: 'annual' | 'monthly'): Promise<HistoricalPeriod[]> {
+  let query = supabase
+    .from('historical_periods')
+    .select('*')
+    .eq('financial_year', fy)
+    .order('start_date')
+  if (periodType) query = query.eq('period_type', periodType)
+  const { data, error } = await query
+  if (error) throw new Error(`Failed to fetch historical periods: ${error.message}`)
+  return data as HistoricalPeriod[]
+}
+
+export async function getHistoricalExpenseCategories(fy: string): Promise<HistoricalExpenseCategory[]> {
+  const { data, error } = await supabase
+    .from('historical_expense_categories')
+    .select('*')
+    .eq('financial_year', fy)
+    .order('amount', { ascending: false })
+  if (error) throw new Error(`Failed to fetch historical expense categories: ${error.message}`)
+  return data as HistoricalExpenseCategory[]
+}
+
+export async function getClaims(): Promise<Claim[]> {
+  const { data, error } = await supabase
+    .from('claims')
+    .select('*')
+    .order('created_at', { ascending: false })
+  if (error) throw new Error(`Failed to fetch claims: ${error.message}`)
+  return data as Claim[]
 }
 
 /** Dashboard summary — derives revenue from invoices, expenses from transactions or BAS */

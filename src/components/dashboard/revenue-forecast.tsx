@@ -4,14 +4,15 @@ import { memo, useMemo } from 'react'
 import { formatCurrency } from '@/lib/utils'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Area, ComposedChart } from 'recharts'
 import { CHART } from '@/lib/constants'
-import type { Invoice } from '@/types/database'
+import type { Invoice, HistoricalPeriod } from '@/types/database'
 import { subMonths, startOfMonth, endOfMonth, format, addMonths } from 'date-fns'
 
 interface RevenueForecastProps {
   invoices: Invoice[]
+  historicalMonthly?: HistoricalPeriod[]
 }
 
-export const RevenueForecast = memo(function RevenueForecast({ invoices }: RevenueForecastProps) {
+export const RevenueForecast = memo(function RevenueForecast({ invoices, historicalMonthly = [] }: RevenueForecastProps) {
   const data = useMemo(() => {
     const now = new Date()
 
@@ -30,26 +31,42 @@ export const RevenueForecast = memo(function RevenueForecast({ invoices }: Reven
       monthlyRevenues.push(rev)
     }
 
-    // Calculate trailing averages for forecast
+    // Seasonal forecast using FY2024-25 pattern as baseline
     const last6 = monthlyRevenues.slice(-6)
     const avg6 = last6.reduce((s, v) => s + v, 0) / last6.length
     const stdDev = Math.sqrt(last6.reduce((s, v) => s + (v - avg6) ** 2, 0) / last6.length)
 
-    // Forecast: next 3 months
+    // Use historical seasonal pattern if available
+    const histAvg = historicalMonthly.length > 0
+      ? historicalMonthly.reduce((s, p) => s + Number(p.income), 0) / historicalMonthly.length
+      : 0
+
+    // Forecast: next 3 months — blend trailing average with seasonal adjustment
     const forecast: typeof historical = []
     for (let i = 1; i <= 3; i++) {
       const d = addMonths(now, i)
+      const calMonth = d.getMonth()
+      const fyIndex = calMonth >= 6 ? calMonth - 6 : calMonth + 6
+      const histPeriod = historicalMonthly[fyIndex]
+
+      let forecastValue = avg6
+      if (histPeriod && histAvg > 0) {
+        // Seasonal factor: how this month compared to average last year
+        const seasonalFactor = Number(histPeriod.income) / histAvg
+        forecastValue = avg6 * seasonalFactor
+      }
+
       forecast.push({
         month: format(d, 'MMM yy'),
         actual: undefined as unknown as number,
-        forecast: Math.round(avg6),
-        upper: Math.round(avg6 + stdDev),
-        lower: Math.round(Math.max(0, avg6 - stdDev)),
+        forecast: Math.round(forecastValue),
+        upper: Math.round(forecastValue + stdDev),
+        lower: Math.round(Math.max(0, forecastValue - stdDev)),
       })
     }
 
     return { chartData: [...historical, ...forecast], avg6, stdDev, monthlyRevenues }
-  }, [invoices])
+  }, [invoices, historicalMonthly])
 
   // Stats
   const avgPerVehicle = invoices.length > 0

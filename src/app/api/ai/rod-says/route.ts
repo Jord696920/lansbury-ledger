@@ -10,6 +10,7 @@ export async function GET() {
   const supabase = createServiceClient()
   const now = new Date()
 
+  try {
   // Gather context: last 3 months of invoices, BAS data, basic stats
   const threeMonthsAgo = format(startOfMonth(subMonths(now, 3)), 'yyyy-MM-dd')
   const thisMonthEnd = format(endOfMonth(now), 'yyyy-MM-dd')
@@ -140,5 +141,8 @@ Rules:
     })
   } catch (err) {
     return Response.json({ error: String(err) }, { status: 500 })
+  }
+  } catch (outerErr) {
+    return Response.json({ error: `Failed to gather data: ${String(outerErr)}` }, { status: 500 })
   }
 }

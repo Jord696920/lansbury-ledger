@@ -7,14 +7,15 @@ import { RevenueForecast } from '@/components/dashboard/revenue-forecast'
 import { RecentInvoices } from '@/components/dashboard/recent-activity'
 import { HealthScore } from '@/components/dashboard/health-score'
 import { RodSays } from '@/components/dashboard/rod-says'
-import { getDashboardSummary, getInvoices, getBASPeriods } from '@/lib/queries'
+import { WeeklyPulse } from '@/components/dashboard/weekly-pulse'
+import { getDashboardSummary, getInvoices, getBASPeriods, getHistoricalPeriods } from '@/lib/queries'
 import { getEOFYDate, getCurrentQuarter } from '@/lib/constants'
 import { formatCurrency } from '@/lib/utils'
 
-import { DollarSign, TrendingUp, Receipt, Calculator, Target, CalendarClock, ArrowRight } from 'lucide-react'
+import { DollarSign, TrendingUp, Receipt, Calculator, Target, CalendarClock, ArrowRight, Download } from 'lucide-react'
 import { differenceInDays, format, subMonths, startOfMonth, endOfMonth, getDaysInMonth } from 'date-fns'
 import Link from 'next/link'
-import type { Invoice, BASPeriod } from '@/types/database'
+import type { Invoice, BASPeriod, HistoricalPeriod } from '@/types/database'
 
 const MONTHLY_TARGET = 10000
 
@@ -34,19 +35,30 @@ export default function DashboardPage() {
   const [summary, setSummary] = useState<Summary | null>(null)
   const [invoices, setInvoices] = useState<Invoice[]>([])
   const [basPeriods, setBasPeriods] = useState<BASPeriod[]>([])
+  const [historicalMonthly, setHistoricalMonthly] = useState<HistoricalPeriod[]>([])
   const [loading, setLoading] = useState(true)
+  const [backupStale, setBackupStale] = useState(false)
+
+  useEffect(() => {
+    const last = localStorage.getItem('rod_last_backup')
+    if (!last || (Date.now() - new Date(last).getTime()) > 14 * 86400000) {
+      setBackupStale(true)
+    }
+  }, [])
 
   useEffect(() => {
     async function load() {
       try {
-        const [s, inv, bas] = await Promise.all([
+        const [s, inv, bas, hist] = await Promise.all([
           getDashboardSummary(),
           getInvoices(),
           getBASPeriods(),
+          getHistoricalPeriods('FY2024-25', 'monthly'),
         ])
         setSummary(s)
         setInvoices(inv)
         setBasPeriods(bas)
+        setHistoricalMonthly(hist)
       } catch (err) {
         console.error('Dashboard load error:', err)
       } finally {
@@ -72,17 +84,18 @@ export default function DashboardPage() {
   const daysLeft = daysInMonth - today
   const dailyRunRate = daysLeft > 0 ? monthRemaining / daysLeft : 0
 
-  // Same month last year
-  const lastYearStart = format(subMonths(startOfMonth(now), 12), 'yyyy-MM-dd')
-  const lastYearEnd = format(endOfMonth(subMonths(now, 12)), 'yyyy-MM-dd')
-  const lastYearRevenue = useMemo(
-    () => invoices.filter((inv) => inv.issue_date >= lastYearStart && inv.issue_date <= lastYearEnd && inv.status !== 'void').reduce((s, inv) => s + inv.total, 0),
-    [invoices, lastYearStart, lastYearEnd]
-  )
+  // Same month last year — use certified historical data
+  const lastYearRevenue = useMemo(() => {
+    const currentMonth = now.getMonth() // 0-indexed
+    // Map calendar month to FY2024-25 index: Jul(6)=0, Aug(7)=1, ... Jun(5)=11
+    const fyIndex = currentMonth >= 6 ? currentMonth - 6 : currentMonth + 6
+    const matchingPeriod = historicalMonthly[fyIndex]
+    return matchingPeriod ? Number(matchingPeriod.income) : 0
+  }, [historicalMonthly, now])
 
-  // Monthly chart data from invoices
+  // Monthly chart data from invoices + historical comparison
   const monthlyData = useMemo(() => {
-    const months: { month: string; revenue: number; expenses: number }[] = []
+    const months: { month: string; revenue: number; expenses: number; lastYear: number }[] = []
     for (let i = 11; i >= 0; i--) {
       const d = subMonths(now, i)
       const ms = startOfMonth(d).toISOString().split('T')[0]
@@ -90,10 +103,14 @@ export default function DashboardPage() {
       const rev = invoices
         .filter((inv) => inv.issue_date >= ms && inv.issue_date <= me && inv.status !== 'void')
         .reduce((s, inv) => s + inv.total, 0)
-      months.push({ month: format(d, 'MMM'), revenue: rev, expenses: 0 })
+      // Match to FY2024-25 historical period by calendar month
+      const calMonth = d.getMonth()
+      const fyIndex = calMonth >= 6 ? calMonth - 6 : calMonth + 6
+      const histPeriod = historicalMonthly[fyIndex]
+      months.push({ month: format(d, 'MMM'), revenue: rev, expenses: 0, lastYear: histPeriod ? Number(histPeriod.income) : 0 })
     }
     return months
-  }, [invoices, now])
+  }, [invoices, historicalMonthly, now])
 
   // EOFY
   const eofyDate = getEOFYDate()
@@ -192,6 +209,21 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* Weekly Pulse */}
+      {!loading && (
+        <WeeklyPulse
+          invoices={invoices}
+          monthRevenue={monthRevenue}
+          monthTarget={MONTHLY_TARGET}
+          lastYearRevenue={lastYearRevenue}
+          daysLeft={daysLeft}
+          basDueDays={basDueDays}
+          basDueDate={basDueDate}
+          eofyDays={eofyDays}
+          uncategorisedCount={summary?.uncategorisedCount ?? 0}
+        />
+      )}
+
       {/* ROW 2 — Metric Cards: 2×2 mobile, 4-across desktop */}
       <div className="grid grid-cols-2 gap-3 lg:gap-4 xl:grid-cols-4">
         <MetricCard title="Revenue YTD" value={summary?.revenue ?? 0} icon={DollarSign} accent="green" loading={loading} index={0} />
@@ -210,7 +242,7 @@ export default function DashboardPage() {
         ) : (
           <>
             <RevenueExpenseChart data={monthlyData} />
-            <RevenueForecast invoices={invoices} />
+            <RevenueForecast invoices={invoices} historicalMonthly={historicalMonthly} />
           </>
         )}
       </div>
@@ -259,7 +291,16 @@ export default function DashboardPage() {
                 <ArrowRight className="h-3 w-3" />
               </Link>
             )}
-            {thisMonthInvoices.length > 0 && basDueDays > 30 && eofyDays > 120 && (summary?.uncategorisedCount ?? 0) === 0 && (
+            {backupStale && (
+              <Link href="/settings" className="flex items-center justify-between rounded-lg bg-surface-amber px-3 py-2.5 text-xs text-accent-amber hover:opacity-90">
+                <div className="flex items-center gap-3">
+                  <Download className="h-4 w-4 shrink-0" />
+                  Backup overdue — download from Settings
+                </div>
+                <ArrowRight className="h-3 w-3" />
+              </Link>
+            )}
+            {thisMonthInvoices.length > 0 && basDueDays > 30 && eofyDays > 120 && (summary?.uncategorisedCount ?? 0) === 0 && !backupStale && (
               <div className="flex items-center gap-3 rounded-lg bg-surface-green px-3 py-2.5 text-xs text-accent-green">
                 All good — nothing needs immediate attention.
               </div>

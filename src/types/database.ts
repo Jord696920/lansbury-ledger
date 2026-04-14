@@ -161,6 +161,53 @@ export interface Anomaly {
   created_at: string
 }
 
+export interface HistoricalPeriod {
+  id: string
+  period_type: 'annual' | 'monthly'
+  period_label: string
+  start_date: string
+  end_date: string
+  financial_year: string
+  income: number
+  expenses: number
+  net_profit: number
+  source: string
+  notes: string | null
+  created_at: string
+}
+
+export interface HistoricalExpenseCategory {
+  id: string
+  financial_year: string
+  category: string
+  amount: number
+  account_code: string | null
+}
+
+export type ClaimStatus = 'open' | 'pending_settlement' | 'settled' | 'closed'
+
+export interface ClaimStageEntry {
+  stage: string
+  date: string
+  note?: string
+}
+
+export interface Claim {
+  id: string
+  claim_name: string
+  reference: string | null
+  status: ClaimStatus
+  total_claimed: number | null
+  total_received: number
+  components: Record<string, number> | null
+  notes: string | null
+  current_stage: string
+  stage_history: ClaimStageEntry[]
+  next_checkin_date: string | null
+  received_date: string | null
+  created_at: string
+}
+
 export interface BusinessProfile {
   id: string
   business_name: string

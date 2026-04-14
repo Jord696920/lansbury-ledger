@@ -9,9 +9,12 @@ interface MonthlyData {
   month: string
   revenue: number
   expenses: number
+  lastYear?: number
 }
 
 export const RevenueExpenseChart = memo(function RevenueExpenseChart({ data }: { data: MonthlyData[] }) {
+  const hasLastYear = data.some((d) => (d.lastYear ?? 0) > 0)
+
   return (
     <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5">
       <h3 className="mb-4 text-sm font-semibold text-text-primary">Revenue vs Expenses</h3>
@@ -28,6 +31,9 @@ export const RevenueExpenseChart = memo(function RevenueExpenseChart({ data }: {
               <YAxis tick={{ fill: CHART.text, fontSize: CHART.textSize }} axisLine={false} tickLine={false} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`} />
               <Tooltip contentStyle={CHART.tooltip} formatter={(value) => formatCurrency(Number(value))} labelStyle={{ color: CHART.text }} />
               <Legend wrapperStyle={{ fontSize: '11px', color: CHART.text }} />
+              {hasLastYear && (
+                <Bar dataKey="lastYear" name="Last Year" fill={CHART.colors.muted} radius={[4, 4, 0, 0]} opacity={0.35} />
+              )}
               <Bar dataKey="revenue" name="Revenue" fill={CHART.colors.blue} radius={[4, 4, 0, 0]} />
               <Bar dataKey="expenses" name="Expenses" fill={CHART.colors.red} radius={[4, 4, 0, 0]} />
             </BarChart>
