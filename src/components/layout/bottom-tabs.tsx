@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { LayoutDashboard, FileText, Calculator, Plus, Menu } from 'lucide-react'
+import { navSections } from './nav-config'
 
 interface BottomTabsProps {
   onNewTap: () => void
@@ -39,16 +40,18 @@ export function BottomTabs({ onNewTap }: BottomTabsProps) {
 
   if (keyboardOpen) return null
 
-  const morePages = [
-    { href: '/transactions', label: 'Transactions' },
-    { href: '/gst', label: 'GST / BAS' },
-    { href: '/deductions', label: 'Deductions' },
-    { href: '/reports', label: 'Reports' },
-    { href: '/household', label: 'Household' },
-    { href: '/claims', label: 'Claims' },
-    { href: '/time-machine', label: 'Time Machine' },
-    { href: '/settings', label: 'Settings' },
-  ]
+  // Exclude items already shown as primary tabs (Home, Invoices, Tax)
+  const primaryHrefs = new Set(['/dashboard', '/invoices', '/tax'])
+  const moreSections = navSections
+    .map((section) => ({
+      ...section,
+      items: section.items.filter((i) => !primaryHrefs.has(i.href)),
+    }))
+    .filter((section) => section.items.length > 0)
+
+  const liveMorePages = moreSections
+    .flatMap((s) => s.items)
+    .filter((i) => !i.comingSoon)
 
   return (
     <>
@@ -56,24 +59,55 @@ export function BottomTabs({ onNewTap }: BottomTabsProps) {
       {showMore && (
         <>
           <div className="fixed inset-0 z-40 backdrop-overlay" onClick={() => setShowMore(false)} />
-          <div className="fixed bottom-[calc(64px+env(safe-area-inset-bottom,0px))] left-0 right-0 z-50 mx-4 mb-2 rounded-2xl border border-border-subtle bg-bg-primary shadow-xl sheet-up">
+          <div className="fixed bottom-[calc(64px+env(safe-area-inset-bottom,0px))] left-0 right-0 z-50 mx-4 mb-2 max-h-[70vh] overflow-y-auto rounded-2xl border border-border-subtle bg-bg-primary shadow-xl sheet-up">
             <div className="p-2">
-              {morePages.map((page) => {
-                const isActive = pathname === page.href || pathname.startsWith(page.href + '/')
-                return (
-                  <Link
-                    key={page.href}
-                    href={page.href}
-                    onClick={() => setShowMore(false)}
-                    className={cn(
-                      'flex items-center rounded-lg px-4 py-3 text-sm font-medium transition-colors touch-target',
-                      isActive ? 'bg-bg-elevated text-accent-primary' : 'text-text-secondary active:bg-bg-elevated'
-                    )}
-                  >
-                    {page.label}
-                  </Link>
-                )
-              })}
+              {moreSections.map((section) => (
+                <div key={section.label} className="mb-3 last:mb-0">
+                  <p className="px-4 pt-2 pb-1 text-[10px] font-semibold uppercase tracking-wider text-text-tertiary">
+                    {section.label}
+                  </p>
+                  {section.items.map((page) => {
+                    const isActive =
+                      !page.comingSoon &&
+                      (pathname === page.href || pathname.startsWith(page.href + '/'))
+                    const Icon = page.icon
+
+                    if (page.comingSoon) {
+                      return (
+                        <div
+                          key={page.href}
+                          className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-text-tertiary opacity-60"
+                          aria-disabled="true"
+                          title="Coming soon"
+                        >
+                          <Icon className="h-4 w-4" strokeWidth={1.5} aria-hidden />
+                          <span className="flex-1">{page.label}</span>
+                          <span className="rounded-full bg-bg-elevated px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wide">
+                            Soon
+                          </span>
+                        </div>
+                      )
+                    }
+
+                    return (
+                      <Link
+                        key={page.href}
+                        href={page.href}
+                        onClick={() => setShowMore(false)}
+                        className={cn(
+                          'flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-colors touch-target',
+                          isActive
+                            ? 'bg-bg-elevated text-accent-primary'
+                            : 'text-text-secondary active:bg-bg-elevated'
+                        )}
+                      >
+                        <Icon className="h-4 w-4" strokeWidth={1.5} aria-hidden />
+                        <span>{page.label}</span>
+                      </Link>
+                    )
+                  })}
+                </div>
+              ))}
             </div>
           </div>
         </>
@@ -101,7 +135,7 @@ export function BottomTabs({ onNewTap }: BottomTabsProps) {
             }
 
             if (tab.href === '__more__') {
-              const isMoreActive = morePages.some((p) => pathname === p.href || pathname.startsWith(p.href + '/'))
+              const isMoreActive = liveMorePages.some((p) => pathname === p.href || pathname.startsWith(p.href + '/'))
               return (
                 <button
                   key="more"

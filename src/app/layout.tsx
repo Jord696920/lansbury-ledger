@@ -1,6 +1,10 @@
 import type { Metadata, Viewport } from 'next'
 import { Plus_Jakarta_Sans, IBM_Plex_Mono } from 'next/font/google'
 import { ThemeProvider } from '@/components/ui/theme-provider'
+import { SWRProvider } from '@/components/swr-provider'
+import { ServiceWorkerRegister } from '@/components/layout/sw-register'
+import { OfflineBanner } from '@/components/layout/offline-banner'
+import { InstallPrompt } from '@/components/layout/install-prompt'
 import './globals.css'
 
 const jakarta = Plus_Jakarta_Sans({
@@ -20,17 +24,29 @@ const plexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: { default: 'Rod | Dashboard', template: 'Rod | %s' },
   description: 'Your books. Your control. No accountant required.',
+  applicationName: 'Rod',
+  manifest: '/manifest.json',
   icons: {
     icon: [
-      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
     ],
-    apple: '/icon.svg',
+    apple: [{ url: '/icons/icon-192.png', sizes: '192x192' }],
+    shortcut: '/icons/icon-192.png',
   },
-  manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
-    statusBarStyle: 'black-translucent',
+    statusBarStyle: 'default',
     title: 'Rod',
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  other: {
+    'mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-status-bar-style': 'default',
+    'apple-mobile-web-app-title': 'Rod',
   },
 }
 
@@ -39,6 +55,10 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   viewportFit: 'cover',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#1B3A6B' },
+    { media: '(prefers-color-scheme: dark)', color: '#0B0F1A' },
+  ],
 }
 
 export default function RootLayout({
@@ -49,7 +69,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={`h-full ${jakarta.variable} ${plexMono.variable}`} suppressHydrationWarning>
       <body className="h-full">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <SWRProvider>
+            <OfflineBanner />
+            {children}
+            <InstallPrompt />
+            <ServiceWorkerRegister />
+          </SWRProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

@@ -1,13 +1,38 @@
 {
   "name": "Rod the Accountant",
   "short_name": "Rod",
-  "description": "Your books. Your control.",
-  "start_url": "/dashboard",
+  "description": "Your books. Your control. No accountant required.",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#0B0F1A",
-  "theme_color": "#0B0F1A",
   "orientation": "portrait",
+  "background_color": "#FFFFFF",
+  "theme_color": "#1B3A6B",
+  "categories": ["finance", "business", "productivity"],
   "icons": [
-    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
-  ]
+    { "src": "/icons/icon-72.png", "sizes": "72x72", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-96.png", "sizes": "96x96", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-128.png", "sizes": "128x128", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-144.png", "sizes": "144x144", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-152.png", "sizes": "152x152", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/icon-384.png", "sizes": "384x384", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Invoice",
+      "short_name": "Invoice",
+      "url": "/invoices/new",
+      "icons": [{ "src": "/icons/shortcut-invoice.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Tax Position",
+      "short_name": "Tax",
+      "url": "/tax",
+      "icons": [{ "src": "/icons/shortcut-tax.png", "sizes": "96x96" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
 }

@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
-import { Save, Building2, Download, AlertTriangle, CheckCircle2 } from 'lucide-react'
+import { Save, Building2, Download, AlertTriangle, CheckCircle2, Bell } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { NotificationsToggle } from '@/components/notifications-toggle'
 import type { BusinessProfile } from '@/types/database'
 
 export default function SettingsPage() {
@@ -156,6 +157,17 @@ export default function SettingsPage() {
 
       {/* Data Backup */}
       <BackupSection />
+
+      {/* Notifications */}
+      <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-4 lg:p-6">
+        <h2 className="flex items-center gap-2 text-sm font-semibold text-text-primary">
+          <Bell className="h-4 w-4 text-accent-primary" />
+          Notifications
+        </h2>
+        <div className="mt-2 divide-y divide-border-subtle">
+          <NotificationsToggle />
+        </div>
+      </div>
 
       {/* Banking */}
       <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-6">

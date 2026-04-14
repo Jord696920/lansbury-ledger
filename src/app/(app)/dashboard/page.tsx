@@ -1,9 +1,24 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
+import dynamic from 'next/dynamic'
 import { MetricCard } from '@/components/ui/metric-card'
-import { RevenueExpenseChart } from '@/components/dashboard/revenue-expense-chart'
-import { RevenueForecast } from '@/components/dashboard/revenue-forecast'
+
+const RevenueExpenseChart = dynamic(
+  () => import('@/components/dashboard/revenue-expense-chart').then((m) => m.RevenueExpenseChart),
+  {
+    ssr: false,
+    loading: () => <div className="h-[220px] animate-pulse rounded-xl bg-bg-elevated" />,
+  },
+)
+
+const RevenueForecast = dynamic(
+  () => import('@/components/dashboard/revenue-forecast').then((m) => m.RevenueForecast),
+  {
+    ssr: false,
+    loading: () => <div className="h-[220px] animate-pulse rounded-xl bg-bg-elevated" />,
+  },
+)
 import { RecentInvoices } from '@/components/dashboard/recent-activity'
 import { HealthScore } from '@/components/dashboard/health-score'
 import { RodSays } from '@/components/dashboard/rod-says'
