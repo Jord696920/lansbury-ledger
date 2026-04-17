@@ -43,7 +43,7 @@
 | Name | SEQ Automotive PTY LTD |
 | ABN | 40 615 653 864 |
 | Address | 417/131 Ross St, Forest Lodge NSW 2037 |
-| Email | sales@seqautomotive.com.au |
+| Email | seqautomotive@gmail.com |
 | Contacts | Craig and Tim |
 | Arrangement | 50/50 profit split on sourced vehicles |
 | Invoicing | Weekly, GST-inclusive, single client |
