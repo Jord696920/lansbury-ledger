@@ -10,9 +10,20 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: 'Anthropic API key not configured' }, { status: 503 })
   }
 
-  const { transaction } = await request.json()
-  if (!transaction) {
+  let body: unknown
+  try {
+    body = await request.json()
+  } catch {
+    return Response.json({ error: 'Invalid JSON' }, { status: 400 })
+  }
+  const { transaction } = (body ?? {}) as { transaction?: unknown }
+  if (!transaction || typeof transaction !== 'object') {
     return Response.json({ error: 'No transaction provided' }, { status: 400 })
+  }
+  // Cap the size of the transaction payload we ship to the LLM.
+  const serialised = JSON.stringify(transaction)
+  if (serialised.length > 4000) {
+    return Response.json({ error: 'Transaction payload too large' }, { status: 413 })
   }
 
   try {

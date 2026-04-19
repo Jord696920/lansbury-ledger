@@ -11,9 +11,30 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: 'Anthropic API key not configured' }, { status: 503 })
   }
 
-  const { transactions } = await request.json()
-  if (!transactions?.length) {
+  let body: unknown
+  try {
+    body = await request.json()
+  } catch {
+    return Response.json({ error: 'Invalid JSON' }, { status: 400 })
+  }
+
+  const { transactions } = (body ?? {}) as { transactions?: unknown }
+  if (!Array.isArray(transactions) || transactions.length === 0) {
     return Response.json({ error: 'No transactions provided' }, { status: 400 })
+  }
+  if (transactions.length > 100) {
+    return Response.json({ error: 'Max 100 transactions per batch' }, { status: 413 })
+  }
+  for (const t of transactions) {
+    const tx = t as { id?: unknown; description?: unknown; amount?: unknown; date?: unknown }
+    if (
+      typeof tx.id !== 'string' ||
+      typeof tx.description !== 'string' ||
+      typeof tx.amount !== 'number' ||
+      typeof tx.date !== 'string'
+    ) {
+      return Response.json({ error: 'Malformed transaction row' }, { status: 400 })
+    }
   }
 
   const supabase = createServiceClient()
