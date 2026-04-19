@@ -1,7 +1,11 @@
 import { createServiceClient } from '@/lib/supabase'
+import { guardApiRoute } from '@/lib/api-guard'
 import { format, subMonths, startOfMonth, endOfMonth } from 'date-fns'
 
-export async function GET() {
+export async function GET(request: Request) {
+  const blocked = guardApiRoute(request, { limit: 10, windowMs: 60_000 })
+  if (blocked) return blocked
+
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey || apiKey === 'ADD_IN_MORNING') {
     return Response.json({ error: 'Anthropic API key not configured' }, { status: 503 })

@@ -1,7 +1,11 @@
 import { NextRequest } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
+import { guardApiRoute } from '@/lib/api-guard'
 
 export async function POST(request: NextRequest) {
+  const blocked = guardApiRoute(request, { limit: 10, windowMs: 60_000 })
+  if (blocked) return blocked
+
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey || apiKey === 'ADD_IN_MORNING') {
     return Response.json({ error: 'Anthropic API key not configured' }, { status: 503 })
