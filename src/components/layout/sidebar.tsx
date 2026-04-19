@@ -15,6 +15,7 @@ import {
   Home,
   Clock,
   Settings,
+  ShieldCheck,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react'
@@ -29,6 +30,7 @@ const navItems = [
   { href: '/reports', label: 'Reports', icon: BarChart3 },
   { href: '/household', label: 'Household', icon: Home },
   { href: '/time-machine', label: 'Time Machine', icon: Clock },
+  { href: '/admin/integrity', label: 'Integrity', icon: ShieldCheck },
   { href: '/settings', label: 'Settings', icon: Settings },
 ]
 
