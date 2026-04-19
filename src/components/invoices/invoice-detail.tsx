@@ -83,7 +83,7 @@ export function InvoiceDetail({ invoice, onClose, onUpdated, onDuplicate, onEdit
     const toEmail = client?.email || invoice.client_email || 'seqautomotive@gmail.com'
     const ccEmail = profile.email || 'lansbury2002@gmail.com'
     const contactName = client?.contact_person?.split('/')[0]?.trim() || 'Craig'
-    const body = `Hi ${contactName},\n\nPlease find attached tax invoice ${invoice.invoice_number} for ${formatCurrency(invoice.total)}.\n\nPayment Details:\nBank: ${profile.bank_name || 'National Australia Bank'}\nAccount Name: ${profile.business_name || 'Jordan Lansbury'}\nBSB: ${profile.bank_bsb || '084-402'}\nACC: ${profile.bank_account || '18-675-1952'}\n\nCheers,\nJordan`
+    const body = `Hi ${contactName},\n\nPlease find attached tax invoice ${invoice.invoice_number} for ${formatCurrency(invoice.total)}.\n\nPayment Details:\nBank: ${profile.bank_name || '—'}\nAccount Name: ${profile.business_name || '—'}\nBSB: ${profile.bank_bsb || '—'}\nACC: ${profile.bank_account || '—'}\n\nCheers,\nJordan`
 
     // Try SMTP API first
     try {
