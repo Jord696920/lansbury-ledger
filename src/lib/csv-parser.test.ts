@@ -45,6 +45,30 @@ describe('parseCSV — NAB format', () => {
   })
 })
 
+describe('parseCSV — Suncorp format', () => {
+  const csv = [
+    'Effective Date,Transaction Details,Amount,Balance',
+    '20/07/2025,WITHDRAWAL CALTEX,-65.00,400.00',
+    '21/07/2025,DEPOSIT SEQ AUTOMOTIVE,1500.00,1900.00',
+  ].join('\n')
+
+  it('detects Suncorp (effective date + transaction details)', () => {
+    expect(parseCSV(csv).bankName).toBe('Suncorp')
+  })
+
+  it('parses both rows', () => {
+    expect(parseCSV(csv).transactions).toHaveLength(2)
+  })
+
+  it('converts DD/MM/YYYY from Effective Date', () => {
+    expect(parseCSV(csv).transactions[0].date).toBe('2025-07-20')
+  })
+
+  it('preserves negative amounts', () => {
+    expect(parseCSV(csv).transactions[0].amount).toBe(-65)
+  })
+})
+
 describe('parseCSV — Westpac format (split debit/credit columns)', () => {
   const csv = [
     'Bank Account,Date,Narrative,Debit Amount,Credit Amount,Balance',

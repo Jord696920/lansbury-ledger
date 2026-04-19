@@ -39,6 +39,18 @@ const bankFormats: BankFormat[] = [
     },
   },
   {
+    name: 'Suncorp',
+    detect: (h) => h.some((c) => c.toLowerCase().includes('effective date')) && h.some((c) => c.toLowerCase().includes('transaction details')),
+    parse: (row) => {
+      const date = parseDate(row['Effective Date'] || row['Date'])
+      const desc = row['Transaction Details'] || row['Description'] || ''
+      const amount = parseFloat(row['Amount'] || '0')
+      const balance = parseFloat(row['Balance'] || '') || null
+      if (!date || !desc) return null
+      return { date, description: desc.trim(), amount, balance }
+    },
+  },
+  {
     name: 'Westpac',
     detect: (h) => h.some((c) => c.toLowerCase().includes('bank account')) || h.some((c) => c.toLowerCase().includes('narrative')),
     parse: (row) => {
