@@ -2,9 +2,10 @@
 
 import { useState, useCallback } from 'react'
 import { parseCSV, findDuplicates, type ParsedTransaction } from '@/lib/csv-parser'
+import { categoriseByRule, type CategoryMatch } from '@/lib/categorisation-rules'
 import { supabase } from '@/lib/supabase'
 import { formatCurrency, formatDate } from '@/lib/utils'
-import { Upload, FileText, AlertTriangle, Check, X } from 'lucide-react'
+import { Upload, FileText, AlertTriangle, Check, X, Zap } from 'lucide-react'
 
 interface CSVImportProps {
   onImportComplete: () => void
@@ -18,6 +19,8 @@ export function CSVImport({ onImportComplete }: CSVImportProps) {
   const [errors, setErrors] = useState<string[]>([])
   const [importing, setImporting] = useState(false)
   const [fileName, setFileName] = useState('')
+  const [categoryMatches, setCategoryMatches] = useState<(CategoryMatch | null)[]>([])
+  const [accountCodeToId, setAccountCodeToId] = useState<Map<string, string>>(new Map())
 
   const handleFile = useCallback(async (file: File) => {
     // File size check (10MB limit)
@@ -31,6 +34,16 @@ export function CSVImport({ onImportComplete }: CSVImportProps) {
     setParsed(result.transactions)
     setBankName(result.bankName)
     setErrors(result.errors)
+    setCategoryMatches(result.transactions.map((t) => categoriseByRule(t.description)))
+
+    // Resolve account code → id for import commit
+    const { data: accounts } = await supabase
+      .from('accounts')
+      .select('id, code')
+      .eq('is_active', true)
+    const map = new Map<string, string>()
+    if (accounts) for (const a of accounts) map.set(a.code, a.id)
+    setAccountCodeToId(map)
 
     // Check duplicates against existing
     const { data: existing } = await supabase
@@ -60,16 +73,25 @@ export function CSVImport({ onImportComplete }: CSVImportProps) {
     setImporting(true)
 
     const batchId = crypto.randomUUID()
-    const toImport = parsed.filter((_, i) => !duplicates.has(i))
+    const toImportWithIndex = parsed
+      .map((t, i) => ({ t, i }))
+      .filter(({ i }) => !duplicates.has(i))
 
-    const rows = toImport.map((t) => ({
-      date: t.date,
-      description: t.description,
-      amount: t.amount,
-      balance: t.balance,
-      source_file: fileName,
-      import_batch_id: batchId,
-    }))
+    const rows = toImportWithIndex.map(({ t, i }) => {
+      const match = categoryMatches[i]
+      const accountId = match ? accountCodeToId.get(match.account_code) : null
+      return {
+        date: t.date,
+        description: t.description,
+        amount: t.amount,
+        balance: t.balance,
+        source_file: fileName,
+        import_batch_id: batchId,
+        account_id: accountId ?? null,
+        business_use_pct: match?.business_use_pct ?? null,
+        categorisation_source: match && accountId ? 'rule' : null,
+      }
+    })
 
     // Insert in batches of 100
     for (let i = 0; i < rows.length; i += 100) {
@@ -151,31 +173,46 @@ export function CSVImport({ onImportComplete }: CSVImportProps) {
                   <th className="px-4 py-2 text-left">Date</th>
                   <th className="px-4 py-2 text-left">Description</th>
                   <th className="px-4 py-2 text-right">Amount</th>
+                  <th className="px-4 py-2 text-left">Category</th>
                   <th className="px-4 py-2 text-center">Status</th>
                 </tr>
               </thead>
               <tbody>
-                {parsed.slice(0, 50).map((t, i) => (
-                  <tr
-                    key={i}
-                    className={`border-b border-border-subtle/50 text-sm ${
-                      duplicates.has(i) ? 'opacity-40' : ''
-                    }`}
-                  >
-                    <td className="px-4 py-2 font-financial text-text-secondary">{formatDate(t.date)}</td>
-                    <td className="px-4 py-2 text-text-primary">{t.description}</td>
-                    <td className={`px-4 py-2 text-right font-financial ${t.amount > 0 ? 'text-accent-green' : 'text-text-primary'}`}>
-                      {formatCurrency(t.amount)}
-                    </td>
-                    <td className="px-4 py-2 text-center">
-                      {duplicates.has(i) ? (
-                        <span className="text-[10px] text-accent-amber">DUPLICATE</span>
-                      ) : (
-                        <span className="text-[10px] text-accent-green">NEW</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                {parsed.slice(0, 50).map((t, i) => {
+                  const match = categoryMatches[i]
+                  return (
+                    <tr
+                      key={i}
+                      className={`border-b border-border-subtle/50 text-sm ${
+                        duplicates.has(i) ? 'opacity-40' : ''
+                      }`}
+                    >
+                      <td className="px-4 py-2 font-financial text-text-secondary">{formatDate(t.date)}</td>
+                      <td className="px-4 py-2 text-text-primary">{t.description}</td>
+                      <td className={`px-4 py-2 text-right font-financial ${t.amount > 0 ? 'text-accent-green' : 'text-text-primary'}`}>
+                        {formatCurrency(t.amount)}
+                      </td>
+                      <td className="px-4 py-2 text-xs text-text-secondary">
+                        {match ? (
+                          <span className="inline-flex items-center gap-1">
+                            <Zap className="h-3 w-3 text-accent-blue" />
+                            {match.account_name}
+                            <span className="text-text-tertiary">· {match.business_use_pct}%</span>
+                          </span>
+                        ) : (
+                          <span className="text-text-tertiary italic">uncategorised</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-2 text-center">
+                        {duplicates.has(i) ? (
+                          <span className="text-[10px] text-accent-amber">DUPLICATE</span>
+                        ) : (
+                          <span className="text-[10px] text-accent-green">NEW</span>
+                        )}
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
             {parsed.length > 50 && (
