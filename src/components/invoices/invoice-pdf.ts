@@ -261,10 +261,10 @@ export function generateInvoicePDF({ invoice, lines, profile, client }: PDFData)
 
   doc.setFontSize(8.5)
   const paymentDetails = [
-    ['Bank', profile.bank_name || 'National Australia Bank'],
-    ['Account Name', profile.business_name || 'Jordan Lansbury'],
-    ['BSB', profile.bank_bsb || '084-402'],
-    ['Account', profile.bank_account || '18-675-1952'],
+    ['Bank', profile.bank_name || '—'],
+    ['Account Name', profile.business_name || '—'],
+    ['BSB', profile.bank_bsb || '—'],
+    ['Account', profile.bank_account || '—'],
   ]
   for (const [label, val] of paymentDetails) {
     doc.setFont('helvetica', 'normal')
