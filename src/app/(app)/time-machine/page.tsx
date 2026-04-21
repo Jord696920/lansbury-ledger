@@ -23,7 +23,7 @@ export default function TimeMachinePage() {
         supabase
           .from('historical_periods')
           .select('*')
-          .eq('financial_year', '2024-25')
+          .eq('financial_year', 'FY2024-25')
           .eq('period_type', 'annual')
           .maybeSingle(),
       ])
