@@ -5,8 +5,9 @@ import Link from 'next/link'
 import { formatCurrency, getCurrentFY } from '@/lib/utils'
 import { supabase } from '@/lib/supabase'
 import { getCurrentQuarter } from '@/lib/constants'
-import { Plus, Bell, TrendingUp, TrendingDown, X } from 'lucide-react'
+import { Plus, Bell, TrendingUp, TrendingDown, X, LogOut } from 'lucide-react'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
+import { signOut } from '@/app/login/actions'
 import type { ComplianceEvent } from '@/types/database'
 
 export function Topbar() {
@@ -14,6 +15,7 @@ export function Topbar() {
   const [gstLoaded, setGstLoaded] = useState(false)
   const [events, setEvents] = useState<ComplianceEvent[]>([])
   const [showNotifs, setShowNotifs] = useState(false)
+  const [showAccount, setShowAccount] = useState(false)
 
   const loadGstPosition = useCallback(async () => {
     try {
@@ -180,8 +182,31 @@ export function Topbar() {
         </div>
 
         <ThemeToggle />
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent-purple text-xs font-bold text-white" aria-label="User avatar">
-          JL
+
+        <div className="relative">
+          <button
+            onClick={() => setShowAccount(!showAccount)}
+            className="flex h-8 w-8 items-center justify-center rounded-full bg-accent-purple text-xs font-bold text-white"
+            aria-label="Account menu"
+          >
+            JL
+          </button>
+          {showAccount && (
+            <>
+              <div className="fixed inset-0 z-40" onClick={() => setShowAccount(false)} />
+              <div className="absolute right-0 top-full z-50 mt-2 w-44 rounded-xl border border-border-subtle bg-bg-primary shadow-lg">
+                <form action={signOut}>
+                  <button
+                    type="submit"
+                    className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-xs text-text-primary hover:bg-bg-elevated"
+                  >
+                    <LogOut className="h-3.5 w-3.5 text-text-tertiary" />
+                    Sign out
+                  </button>
+                </form>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </header>
