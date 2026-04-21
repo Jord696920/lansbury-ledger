@@ -41,6 +41,25 @@ export function InvoiceForm({ onClose, onSaved, duplicate }: InvoiceFormProps) {
     loadData()
   }, [])
 
+  // Compute next invoice number from MAX(invoice_number)+1 rather than the
+  // stored business_profile.invoice_next_number counter, which had drifted
+  // 3 behind (counter=468, actual max=INV-000471) and caused unique-constraint
+  // collisions on save.
+  async function fetchNextInvoiceNumber(prefix: string): Promise<{ next: number; formatted: string }> {
+    const { data } = await supabase
+      .from('invoices')
+      .select('invoice_number')
+      .order('invoice_number', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+
+    const latest = data?.invoice_number
+      ? parseInt(String(data.invoice_number).replace(/\D/g, ''), 10) || 0
+      : 0
+    const next = latest + 1
+    return { next, formatted: generateInvoiceNumber(prefix, next) }
+  }
+
   async function loadData() {
     const [profileRes, clientsRes] = await Promise.all([
       supabase.from('business_profile').select('*').limit(1).single(),
@@ -49,7 +68,8 @@ export function InvoiceForm({ onClose, onSaved, duplicate }: InvoiceFormProps) {
     if (profileRes.data) {
       const p = profileRes.data as BusinessProfile
       setProfile(p)
-      setNextInvoiceNumber(generateInvoiceNumber(p.invoice_prefix, p.invoice_next_number))
+      const { formatted } = await fetchNextInvoiceNumber(p.invoice_prefix)
+      setNextInvoiceNumber(formatted)
     }
     if (clientsRes.data) {
       const clients = clientsRes.data as Client[]
@@ -90,7 +110,9 @@ export function InvoiceForm({ onClose, onSaved, duplicate }: InvoiceFormProps) {
     }
 
     setSaving(true)
-    const invoiceNumber = generateInvoiceNumber(profile.invoice_prefix, profile.invoice_next_number)
+    // Re-fetch max at save time to avoid staleness if another create landed
+    // while this form was open.
+    const { formatted: invoiceNumber } = await fetchNextInvoiceNumber(profile.invoice_prefix)
     const description = `Consulting Fee ${vehicle.trim()}`
 
     const { data: invoice, error } = await supabase
@@ -128,12 +150,6 @@ export function InvoiceForm({ onClose, onSaved, duplicate }: InvoiceFormProps) {
       gst_amount: gstAmount,
       total: exGSTAmount,
     })
-
-    // Increment invoice number
-    await supabase
-      .from('business_profile')
-      .update({ invoice_next_number: profile.invoice_next_number + 1 })
-      .eq('id', profile.id)
 
     setSaving(false)
     toast(asDraft ? 'Draft saved' : `${invoiceNumber} created`, 'success')
