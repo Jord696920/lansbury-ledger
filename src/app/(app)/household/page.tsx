@@ -7,9 +7,12 @@ import { getDashboardSummary, calculateIncomeTax, calculateSBITO } from '@/lib/q
 import { MEDICARE_LEVY_RATE, getEOFYDate } from '@/lib/constants'
 import { Home, Heart, TrendingUp, Wallet, PiggyBank, Coffee, ShieldCheck } from 'lucide-react'
 import { subMonths, startOfMonth, endOfMonth, format } from 'date-fns'
-import type { Invoice } from '@/types/database'
+import type { Invoice, HouseholdMonthlyCosts } from '@/types/database'
 
-const MONTHLY_COSTS = {
+// Used only as a safety fallback when business_profile.monthly_costs is
+// NULL (pre-migration databases). After the household_settings migration
+// runs, the DB-seeded values are the source of truth.
+const FALLBACK_monthlyCosts: HouseholdMonthlyCosts = {
   mortgage: 2800,
   groceries: 1200,
   utilities: 350,
@@ -24,17 +27,21 @@ export default function HouseholdPage() {
   const [deductions, setDeductions] = useState(0)
   const [invoices, setInvoices] = useState<Invoice[]>([])
   const [noDeductionData, setNoDeductionData] = useState(false)
+  const [monthlyCosts, setMonthlyCosts] = useState<HouseholdMonthlyCosts>(FALLBACK_monthlyCosts)
 
   useEffect(() => {
     async function load() {
-      const [summary, { data: inv }] = await Promise.all([
+      const [summary, { data: inv }, { data: profile }] = await Promise.all([
         getDashboardSummary(),
         supabase.from('invoices').select('*').neq('status', 'void'),
+        supabase.from('business_profile').select('monthly_costs').limit(1).maybeSingle(),
       ])
       setRevenue(summary.revenue)
       setDeductions(summary.expenses)
       setNoDeductionData(summary.expensesSource === 'none')
       setInvoices(inv ?? [])
+      const dbCosts = (profile as { monthly_costs?: HouseholdMonthlyCosts | null } | null)?.monthly_costs
+      if (dbCosts) setMonthlyCosts(dbCosts)
       setLoading(false)
     }
     load()
@@ -54,7 +61,7 @@ export default function HouseholdPage() {
   const monthlyTakeHome = takeHome / monthsElapsed
 
   // Total household costs
-  const totalMonthlyCosts = Object.values(MONTHLY_COSTS).reduce((s, v) => s + v, 0)
+  const totalMonthlyCosts = Object.values(monthlyCosts).reduce((s, v) => s + v, 0)
   const monthlyFreedom = monthlyTakeHome - totalMonthlyCosts
   const runwayMonths = monthlyTakeHome > 0 ? Math.floor(takeHome / totalMonthlyCosts) : 0
 
@@ -186,7 +193,7 @@ export default function HouseholdPage() {
         <div className="rounded-2xl border border-border-subtle bg-bg-primary shadow-sm p-5">
           <h3 className="mb-4 text-sm font-semibold text-text-primary">Monthly Household Costs</h3>
           <div className="space-y-2">
-            {Object.entries(MONTHLY_COSTS).map(([key, val]) => (
+            {Object.entries(monthlyCosts).map(([key, val]) => (
               <div key={key} className="flex items-center justify-between rounded-lg bg-bg-elevated px-3 py-2">
                 <span className="text-xs capitalize text-text-secondary">{key.replace(/([A-Z])/g, ' $1')}</span>
                 <span className="font-financial text-xs font-medium text-text-primary">{formatCurrency(val)}</span>

@@ -238,4 +238,15 @@ export interface BusinessProfile {
   city: string
   state: string
   postcode: string
+  monthly_costs: HouseholdMonthlyCosts | null
+}
+
+export interface HouseholdMonthlyCosts {
+  mortgage: number
+  groceries: number
+  utilities: number
+  insurance: number
+  subscriptions: number
+  kids: number
+  [key: string]: number
 }
