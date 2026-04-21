@@ -6,51 +6,30 @@ import { formatCurrency, cn } from '@/lib/utils'
 import { calculateIncomeTax, calculateSBITO } from '@/lib/queries'
 import { MEDICARE_LEVY_RATE } from '@/lib/constants'
 import { Clock, ArrowRight, TrendingUp, TrendingDown, Equal } from 'lucide-react'
-import type { Invoice, BASPeriod } from '@/types/database'
-
-// FY2024-25 certified figures
-const FY2425 = {
-  revenue: 165324,  // from certified BAS totals
-  gstCollected: 15029.45,
-  gstCredits: 4698,
-  netGST: 10331.45,
-  quarters: ['Q1 Jul-Sep 2024', 'Q2 Oct-Dec 2024', 'Q3 Jan-Mar 2025', 'Q4 Apr-Jun 2025'],
-}
-
-// FY2024-25 tax brackets (different from 2025-26!)
-const TAX_BRACKETS_FY2425 = [
-  { min: 0, max: 18200, rate: 0, base: 0 },
-  { min: 18201, max: 45000, rate: 0.19, base: 0 },
-  { min: 45001, max: 120000, rate: 0.325, base: 5092 },
-  { min: 120001, max: 180000, rate: 0.37, base: 29467 },
-  { min: 180001, max: Infinity, rate: 0.45, base: 51667 },
-]
-
-function calculateTaxFY2425(taxable: number): number {
-  if (taxable <= 0) return 0
-  for (const b of TAX_BRACKETS_FY2425) {
-    if (taxable <= b.max) {
-      return b.base + (taxable - b.min) * b.rate
-    }
-  }
-  const last = TAX_BRACKETS_FY2425[TAX_BRACKETS_FY2425.length - 1]
-  return last.base + (taxable - last.min) * last.rate
-}
+import type { Invoice, BASPeriod, HistoricalPeriod } from '@/types/database'
 
 export default function TimeMachinePage() {
   const [loading, setLoading] = useState(true)
   const [currentInvoices, setCurrentInvoices] = useState<Invoice[]>([])
   const [currentBAS, setCurrentBAS] = useState<BASPeriod[]>([])
+  const [historicalAnnual, setHistoricalAnnual] = useState<HistoricalPeriod | null>(null)
   const [scenarioExpenses, setScenarioExpenses] = useState(0)
 
   useEffect(() => {
     async function load() {
-      const [{ data: inv }, { data: bas }] = await Promise.all([
+      const [{ data: inv }, { data: bas }, { data: hist }] = await Promise.all([
         supabase.from('invoices').select('*').neq('status', 'void'),
         supabase.from('bas_periods').select('*').order('start_date', { ascending: true }),
+        supabase
+          .from('historical_periods')
+          .select('*')
+          .eq('financial_year', '2024-25')
+          .eq('period_type', 'annual')
+          .maybeSingle(),
       ])
       setCurrentInvoices(inv ?? [])
       setCurrentBAS(bas ?? [])
+      setHistoricalAnnual((hist as HistoricalPeriod | null) ?? null)
       setLoading(false)
     }
     load()
@@ -70,14 +49,17 @@ export default function TimeMachinePage() {
       .reduce((s, p) => s + (p.gst_credits ?? 0) * 11, 0)
   }, [currentBAS])
 
-  // FY2024-25 — what it actually was
-  const fy2425Deductions = FY2425.gstCredits * 11 // estimated from BAS credits
-  const fy2425Taxable = FY2425.revenue - fy2425Deductions
-  const fy2425Tax = calculateTaxFY2425(fy2425Taxable)
+  // FY2024-25 — certified figures from historical_periods.
+  // Stage 3 cuts took effect 1 Jul 2024, so FY24-25 and FY25-26 share the
+  // same bracket table (0/16/30/37/45). Both years use calculateIncomeTax.
+  const fy2425Revenue = historicalAnnual?.income ?? 0
+  const fy2425Deductions = historicalAnnual?.expenses ?? 0
+  const fy2425Taxable = Math.max(0, fy2425Revenue - fy2425Deductions)
+  const fy2425Tax = calculateIncomeTax(fy2425Taxable)
   const fy2425Medicare = fy2425Taxable * MEDICARE_LEVY_RATE
-  const fy2425Sbito = Math.min(fy2425Tax * 0.08, 1000) // SBITO for 2024-25
+  const fy2425Sbito = calculateSBITO(fy2425Tax)
   const fy2425NetTax = fy2425Tax + fy2425Medicare - fy2425Sbito
-  const fy2425TakeHome = FY2425.revenue - fy2425Deductions - fy2425NetTax
+  const fy2425TakeHome = fy2425Revenue - fy2425Deductions - fy2425NetTax
 
   // FY2025-26 projections (annualized from YTD)
   const now = new Date()
@@ -85,7 +67,7 @@ export default function TimeMachinePage() {
   const monthsElapsed = Math.max(1, (now.getFullYear() - fyStart.getFullYear()) * 12 + (now.getMonth() - fyStart.getMonth()) + 1)
   const projectedRevenue = (fy2526Revenue / monthsElapsed) * 12
   const projectedExpenses = fy2526Expenses > 0 ? (fy2526Expenses / monthsElapsed) * 12 : fy2425Deductions // fallback
-  const projectedTaxable = projectedRevenue - projectedExpenses - scenarioExpenses
+  const projectedTaxable = Math.max(0, projectedRevenue - projectedExpenses - scenarioExpenses)
   const projectedTax = calculateIncomeTax(projectedTaxable)
   const projectedMedicare = projectedTaxable * MEDICARE_LEVY_RATE
   const projectedSbito = calculateSBITO(projectedTax)
@@ -93,7 +75,7 @@ export default function TimeMachinePage() {
   const projectedTakeHome = projectedRevenue - projectedExpenses - scenarioExpenses - projectedNetTax
 
   // Comparisons
-  const revDiff = projectedRevenue - FY2425.revenue
+  const revDiff = projectedRevenue - fy2425Revenue
   const taxDiff = projectedNetTax - fy2425NetTax
   const takeHomeDiff = projectedTakeHome - fy2425TakeHome
 
@@ -145,7 +127,7 @@ export default function TimeMachinePage() {
           <tbody className="divide-y divide-border-subtle">
             <tr>
               <td className="py-2.5 text-text-secondary">Gross Revenue</td>
-              <td className="py-2.5 text-right font-financial text-text-primary">{formatCurrency(FY2425.revenue)}</td>
+              <td className="py-2.5 text-right font-financial text-text-primary">{formatCurrency(fy2425Revenue)}</td>
               <td></td>
               <td className="py-2.5 text-right font-financial font-semibold text-text-primary">{formatCurrency(projectedRevenue)}</td>
               <td className="py-2.5 text-right"><DiffBadge value={revDiff} /></td>
@@ -265,7 +247,7 @@ export default function TimeMachinePage() {
           ) : revDiff < 0 ? (
             <>
               Revenue is tracking <span className="font-financial font-semibold text-accent-amber">{formatCurrency(Math.abs(revDiff))} lower</span> than
-              last year with {12 - monthsElapsed} months remaining. You need <span className="font-financial">{formatCurrency((FY2425.revenue - fy2526Revenue) / Math.max(1, 12 - monthsElapsed))}/month</span> to match last year.
+              last year with {12 - monthsElapsed} months remaining. You need <span className="font-financial">{formatCurrency((fy2425Revenue - fy2526Revenue) / Math.max(1, 12 - monthsElapsed))}/month</span> to match last year.
             </>
           ) : (
             <>Revenue is tracking exactly in line with last year.</>
