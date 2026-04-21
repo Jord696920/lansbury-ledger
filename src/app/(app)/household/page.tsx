@@ -23,6 +23,7 @@ export default function HouseholdPage() {
   const [revenue, setRevenue] = useState(0)
   const [deductions, setDeductions] = useState(0)
   const [invoices, setInvoices] = useState<Invoice[]>([])
+  const [noDeductionData, setNoDeductionData] = useState(false)
 
   useEffect(() => {
     async function load() {
@@ -32,6 +33,7 @@ export default function HouseholdPage() {
       ])
       setRevenue(summary.revenue)
       setDeductions(summary.expenses)
+      setNoDeductionData(summary.expensesSource === 'none')
       setInvoices(inv ?? [])
       setLoading(false)
     }
@@ -101,6 +103,12 @@ export default function HouseholdPage() {
           How the business flows through to the Lansbury household — for Bethany
         </p>
       </div>
+
+      {noDeductionData && (
+        <div className="rounded-lg border border-accent-amber/30 bg-surface-amber px-3 py-2 text-xs text-text-primary">
+          <span className="font-semibold">Worst-case take-home.</span> No transactions categorised yet — deductions read as $0, so tax shown is the maximum (and take-home the minimum). Real numbers will appear once bank CSVs are imported.
+        </div>
+      )}
 
       {/* Hero Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">

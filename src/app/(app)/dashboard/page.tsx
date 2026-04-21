@@ -37,6 +37,7 @@ const MONTHLY_TARGET = 10000
 interface Summary {
   revenue: number
   expenses: number
+  expensesSource: 'transactions' | 'none'
   netProfit: number
   netGST: number
   estimatedTax: number
@@ -346,6 +347,9 @@ export default function DashboardPage() {
             {summary && (
               <p className="mb-4 text-xs text-text-secondary">
                 Estimated tax: <span className="font-financial font-semibold text-text-primary">{formatCurrency(summary.estimatedTax)}</span>
+                {summary.expensesSource === 'none' && (
+                  <span className="ml-1 text-[10px] text-accent-amber">(worst-case — no deductions yet)</span>
+                )}
               </p>
             )}
             <div className="flex gap-2">

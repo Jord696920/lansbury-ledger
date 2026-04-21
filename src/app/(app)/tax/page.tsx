@@ -20,6 +20,7 @@ export default function TaxPage() {
   const [sbito, setSbito] = useState(0)
   const [effectiveRate, setEffectiveRate] = useState(0)
   const [profile, setProfile] = useState<BusinessProfile | null>(null)
+  const [noDeductionData, setNoDeductionData] = useState(false)
 
   // What If simulator
   const [assetPurchase, setAssetPurchase] = useState(0)
@@ -47,6 +48,7 @@ export default function TaxPage() {
 
       setRevenue(summary.revenue)
       setDeductions(summary.expenses)
+      setNoDeductionData(summary.expensesSource === 'none')
       setProfile(bp)
 
       const taxable = summary.revenue - summary.expenses
@@ -133,6 +135,12 @@ export default function TaxPage() {
       {eofyDays <= 90 && (
         <div className="rounded-lg border border-accent-red/20 bg-surface-red px-3 py-2 text-center text-xs font-semibold text-accent-red lg:hidden">
           {eofyDays} days to EOFY
+        </div>
+      )}
+
+      {noDeductionData && (
+        <div className="rounded-lg border border-accent-amber/30 bg-surface-amber px-3 py-2 text-xs text-text-primary">
+          <span className="font-semibold">Worst-case estimate.</span> No transactions categorised yet — deductions read as $0, so tax shown is the maximum. Import bank CSVs in Settings → Bank Import for an accurate figure.
         </div>
       )}
 

@@ -155,8 +155,10 @@ export async function getDashboardSummary() {
   let expenses = 0
   let gstCredits = 0
   const hasTransactions = transactions && transactions.length > 0
+  let expensesSource: 'transactions' | 'none' = 'none'
 
   if (hasTransactions) {
+    expensesSource = 'transactions'
     for (const t of transactions!) {
       if (t.is_personal) continue
       const acct = t.account as unknown as { type: string; code: string } | null
@@ -168,7 +170,11 @@ export async function getDashboardSummary() {
       }
     }
   } else {
-    // Estimate from BAS credits for current FY quarters
+    // No categorised transactions yet — pull gst_credits from BAS for the
+    // GST module, but do NOT fabricate expenses from credits × 11. That
+    // formula assumes every expense dollar attracted GST, which is wrong
+    // (insurance, wages, ASIC fees, rego etc are GST-free), and produced
+    // materially wrong net-profit + tax estimates on the dashboard.
     const { data: basPeriods } = await supabase
       .from('bas_periods')
       .select('gst_credits')
@@ -178,8 +184,6 @@ export async function getDashboardSummary() {
       for (const p of basPeriods) {
         gstCredits += p.gst_credits ?? 0
       }
-      // Estimate expenses as credits × 11 (reverse the 1/11 GST calc)
-      expenses = gstCredits * 11
     }
   }
 
@@ -203,6 +207,7 @@ export async function getDashboardSummary() {
   return {
     revenue,
     expenses,
+    expensesSource,
     netProfit,
     gstCollected,
     gstCredits,
