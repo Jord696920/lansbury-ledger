@@ -137,7 +137,8 @@ export function InvoiceDetail({ invoice, onClose, onUpdated, onDuplicate, onEdit
   }
 
   async function handleDelete() {
-    await supabase.from('invoice_lines').delete().eq('invoice_id', invoice.id)
+    // invoice_lines.invoice_id has ON DELETE CASCADE — deleting the
+    // header drops the lines atomically.
     await supabase.from('invoices').delete().eq('id', invoice.id)
     toast(`${invoice.invoice_number} deleted`, 'success')
     onUpdated()
