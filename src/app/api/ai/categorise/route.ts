@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
   const supabase = createServiceClient()
   const { data: accounts } = await supabase
     .from('accounts')
-    .select('code, name, type, tax_code, business_use_pct')
+    .select('id, code, name, type, tax_code, business_use_pct')
     .eq('is_active', true)
     .order('sort_order')
 
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 4000,
         system: `You are an Australian sole trader accounting categorisation engine.
 Business: Vehicle sourcing consultant, ABN 18 650 448 336, QLD.
@@ -116,12 +116,14 @@ ${JSON.stringify(txnBatch)}`,
 
       // Auto-categorise high confidence (>90%)
       if (s.confidence >= 0.9) {
-        const account = accounts?.find((a) => a.code === s.category_code)
-        if (account) {
+        const account = accounts?.find((a) => a.code === s.category_code) as
+          | { id: string }
+          | undefined
+        if (account?.id) {
           await supabase
             .from('transactions')
             .update({
-              account_id: (account as unknown as { id: string }).id || undefined,
+              account_id: account.id,
               ai_category_suggestion: s.category_code,
               ai_confidence: s.confidence,
               business_use_pct: s.business_use_pct,

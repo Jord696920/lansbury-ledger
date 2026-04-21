@@ -28,7 +28,7 @@ export async function GET(request: Request) {
   ] = await Promise.all([
     supabase
       .from('invoices')
-      .select('total, subtotal, gst_amount, issue_date, status, customer_name')
+      .select('total, subtotal, gst_amount, issue_date, status, client_name')
       .gte('issue_date', threeMonthsAgo)
       .lte('issue_date', thisMonthEnd)
       .neq('status', 'void')
@@ -60,7 +60,7 @@ export async function GET(request: Request) {
   const recentRevenue = (recentInvoices ?? []).reduce((s, inv) => s + inv.total, 0)
   const ytdRevenue = (allInvoices ?? []).reduce((s, inv) => s + inv.total, 0)
   const invoiceCount3mo = (recentInvoices ?? []).length
-  const topCustomers = [...new Set((recentInvoices ?? []).map((inv) => inv.customer_name))].slice(0, 5)
+  const topCustomers = [...new Set((recentInvoices ?? []).map((inv) => inv.client_name))].slice(0, 5)
 
   // Monthly breakdown
   const monthlyRevenues: { month: string; total: number }[] = []

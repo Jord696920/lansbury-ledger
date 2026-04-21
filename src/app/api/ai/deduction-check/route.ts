@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 1000,
         system: `You are an Australian tax deduction advisor for sole traders.
 Always cite ATO rulings (TR, TD, PCG numbers) where applicable.
