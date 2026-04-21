@@ -1,6 +1,6 @@
 'use client'
 
-import { FileText, Receipt, Camera } from 'lucide-react'
+import { FileText, Receipt } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface NewActionSheetProps {
@@ -8,22 +8,19 @@ interface NewActionSheetProps {
   onClose: () => void
   onNewInvoice: () => void
   onLogExpense: () => void
-  onSnapReceipt: () => void
 }
 
 const actions = [
   { key: 'invoice', label: 'New Invoice', desc: 'Create and send an invoice', icon: FileText, color: 'text-accent-green', bg: 'bg-surface-green' },
   { key: 'expense', label: 'Log Expense', desc: 'Record a business expense', icon: Receipt, color: 'text-accent-blue', bg: 'bg-surface-blue' },
-  { key: 'receipt', label: 'Snap Receipt', desc: 'Photograph a receipt', icon: Camera, color: 'text-accent-purple', bg: 'bg-surface-purple' },
 ] as const
 
-export function NewActionSheet({ open, onClose, onNewInvoice, onLogExpense, onSnapReceipt }: NewActionSheetProps) {
+export function NewActionSheet({ open, onClose, onNewInvoice, onLogExpense }: NewActionSheetProps) {
   if (!open) return null
 
   const handlers: Record<string, () => void> = {
     invoice: onNewInvoice,
     expense: onLogExpense,
-    receipt: onSnapReceipt,
   }
 
   return (

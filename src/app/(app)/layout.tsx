@@ -15,7 +15,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [showNewSheet, setShowNewSheet] = useState(false)
   const [showInvoiceForm, setShowInvoiceForm] = useState(false)
   const [showExpenseForm, setShowExpenseForm] = useState(false)
-  const [showReceiptCapture, setShowReceiptCapture] = useState(false)
 
   return (
     <ToastProvider>
@@ -51,7 +50,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           onClose={() => setShowNewSheet(false)}
           onNewInvoice={() => setShowInvoiceForm(true)}
           onLogExpense={() => setShowExpenseForm(true)}
-          onSnapReceipt={() => setShowReceiptCapture(true)}
         />
 
         {/* Global invoice form (triggered from + New) */}
