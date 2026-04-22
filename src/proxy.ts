@@ -1,11 +1,9 @@
 import { NextResponse, type NextRequest } from 'next/server'
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { createServerClient } from '@supabase/ssr'
 
 // Routes that authenticated users shouldn't see (they bounce to /dashboard).
 const PUBLIC_ONLY = ['/login']
 
-// Anything not matched by the matcher below is left alone (e.g. _next, api).
-// All other routes require auth.
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request })
 
@@ -17,34 +15,41 @@ export async function proxy(request: NextRequest) {
         getAll() {
           return request.cookies.getAll()
         },
-        setAll(toSet: { name: string; value: string; options: CookieOptions }[]) {
-          for (const c of toSet) request.cookies.set(c.name, c.value)
+        setAll(cookiesToSet) {
+          // 1) Update the incoming request so the next getAll() sees fresh cookies
+          cookiesToSet.forEach(({ name, value }) =>
+            request.cookies.set(name, value)
+          )
+          // 2) Create a new response carrying the updated request cookies
           response = NextResponse.next({ request })
-          for (const c of toSet) response.cookies.set(c.name, c.value, c.options)
+          // 3) Write the refreshed cookies onto the OUTGOING response so the browser persists them
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options)
+          )
         },
       },
     }
   )
 
-  // Touching getUser() refreshes the session cookies if needed.
+  // IMPORTANT: getUser() triggers token refresh + writes new cookies via setAll above
   const {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const path = request.nextUrl.pathname
-  const isPublicOnly = PUBLIC_ONLY.includes(path)
+  const pathname = request.nextUrl.pathname
 
-  if (!user && !isPublicOnly) {
+  // Unauthenticated users hitting a protected route → /login?next=...
+  if (!user && !PUBLIC_ONLY.includes(pathname)) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
-    url.searchParams.set('next', path)
+    url.searchParams.set('next', pathname)
     return NextResponse.redirect(url)
   }
 
-  if (user && isPublicOnly) {
+  // Authenticated users hitting /login → /dashboard
+  if (user && PUBLIC_ONLY.includes(pathname)) {
     const url = request.nextUrl.clone()
     url.pathname = '/dashboard'
-    url.search = ''
     return NextResponse.redirect(url)
   }
 
@@ -53,10 +58,7 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Run on every request except next internals, api routes, static files,
-    // PWA assets, and image optimisation paths. Auth is enforced for the
-    // app shell and skipped for API routes (those use api-guard.ts /
-    // service role).
-    '/((?!_next/static|_next/image|api|favicon.ico|sw.js|workbox-.*|manifest.webmanifest|.*\\.(?:png|jpg|jpeg|svg|webp|gif|ico|js|woff2)).*)',
+    // Match all paths except Next internals, static files, and public assets
+    '/((?!_next/static|_next/image|favicon.ico|icons|manifest.json|sw.js|workbox-.*\\.js|robots.txt|.*\\.png$|.*\\.jpg$|.*\\.svg$).*)',
   ],
 }

@@ -1,8 +1,9 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
 export async function createSupabaseServerClient() {
   const cookieStore = await cookies()
+
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -11,13 +12,14 @@ export async function createSupabaseServerClient() {
         getAll() {
           return cookieStore.getAll()
         },
-        setAll(toSet: { name: string; value: string; options: CookieOptions }[]) {
+        setAll(cookiesToSet) {
           try {
-            for (const c of toSet) cookieStore.set(c.name, c.value, c.options)
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            )
           } catch {
-            // setAll may be invoked from a Server Component where mutating
-            // cookies is disallowed. Safe to ignore — the proxy refreshes
-            // the session on the next request.
+            // Called from a Server Component. Safe to ignore — the proxy
+            // will refresh the session on the next request.
           }
         },
       },
