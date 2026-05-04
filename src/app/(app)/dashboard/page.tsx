@@ -11,6 +11,7 @@ import { getDashboardSummary, getInvoices, getBASPeriods } from '@/lib/queries'
 import { getEOFYDate, getCurrentQuarter } from '@/lib/constants'
 import { formatCurrency } from '@/lib/utils'
 
+import { UpcomingExpenses } from '@/components/dashboard/upcoming-expenses'
 import { DollarSign, TrendingUp, Receipt, Calculator, Target, CalendarClock, ArrowRight } from 'lucide-react'
 import { differenceInDays, format, subMonths, startOfMonth, endOfMonth, getDaysInMonth } from 'date-fns'
 import Link from 'next/link'
@@ -304,8 +305,11 @@ export default function DashboardPage() {
         )}
       </div>
 
-      {/* ROW 5 — Recent Invoices */}
-      <RecentInvoices invoices={invoices} />
+      {/* ROW 5 — Upcoming Expenses + Recent Invoices */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <UpcomingExpenses />
+        <RecentInvoices invoices={invoices} />
+      </div>
     </div>
   )
 }

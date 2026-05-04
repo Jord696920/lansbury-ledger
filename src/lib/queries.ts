@@ -1,7 +1,7 @@
 import { supabase } from './supabase'
 import { getFYDates } from './utils'
 import { TAX_BRACKETS_FY2526, SBITO_RATE, SBITO_CAP } from './constants'
-import type { Account, Transaction, Invoice, BASPeriod, ComplianceEvent, BusinessProfile, Anomaly } from '@/types/database'
+import type { Account, Transaction, Invoice, BASPeriod, ComplianceEvent, BusinessProfile, Anomaly, Budget, RecurringExpense, EmailReceipt } from '@/types/database'
 
 export async function getAccounts(): Promise<Account[]> {
   const { data, error } = await supabase
@@ -200,4 +200,128 @@ export function calculateIncomeTax(taxableIncome: number): number {
 /** Small Business Income Tax Offset (s61-500 ITAA 1997) */
 export function calculateSBITO(taxOnBusinessIncome: number): number {
   return Math.min(taxOnBusinessIncome * SBITO_RATE, SBITO_CAP)
+}
+
+// ── Financial Hub Queries ─────────────────────────────────────────────────────
+
+export async function getBudgets(periodStart?: string, periodEnd?: string): Promise<Budget[]> {
+  let query = supabase
+    .from('budgets')
+    .select('*, account:accounts(id, code, name, type, tax_code, business_use_pct)')
+    .order('category_name')
+  if (periodStart) query = query.gte('period_start', periodStart)
+  if (periodEnd)   query = query.lte('period_end', periodEnd)
+  const { data, error } = await query
+  if (error) throw new Error(`Failed to fetch budgets: ${error.message}`)
+  return (data ?? []) as Budget[]
+}
+
+export async function upsertBudget(budget: Omit<Budget, 'id' | 'created_at' | 'updated_at' | 'account'>): Promise<Budget> {
+  const { data, error } = await supabase
+    .from('budgets')
+    .upsert({ ...budget, updated_at: new Date().toISOString() })
+    .select()
+    .single()
+  if (error) throw new Error(`Failed to save budget: ${error.message}`)
+  return data as Budget
+}
+
+export async function deleteBudget(id: string): Promise<void> {
+  const { error } = await supabase.from('budgets').delete().eq('id', id)
+  if (error) throw new Error(`Failed to delete budget: ${error.message}`)
+}
+
+export async function getRecurringExpenses(activeOnly = true): Promise<RecurringExpense[]> {
+  let query = supabase
+    .from('recurring_expenses')
+    .select('*, account:accounts(id, code, name, type, tax_code, business_use_pct)')
+    .order('next_due_date')
+  if (activeOnly) query = query.eq('is_active', true)
+  const { data, error } = await query
+  if (error) throw new Error(`Failed to fetch recurring expenses: ${error.message}`)
+  return (data ?? []) as RecurringExpense[]
+}
+
+export async function upsertRecurringExpense(
+  rec: Omit<RecurringExpense, 'id' | 'created_at' | 'updated_at' | 'account'> & { id?: string }
+): Promise<RecurringExpense> {
+  const { data, error } = await supabase
+    .from('recurring_expenses')
+    .upsert({ ...rec, updated_at: new Date().toISOString() })
+    .select()
+    .single()
+  if (error) throw new Error(`Failed to save recurring expense: ${error.message}`)
+  return data as RecurringExpense
+}
+
+export async function deleteRecurringExpense(id: string): Promise<void> {
+  const { error } = await supabase.from('recurring_expenses').delete().eq('id', id)
+  if (error) throw new Error(`Failed to delete recurring expense: ${error.message}`)
+}
+
+export async function getEmailReceipts(status?: string): Promise<EmailReceipt[]> {
+  let query = supabase
+    .from('email_receipts')
+    .select('*')
+    .order('created_at', { ascending: false })
+  if (status) query = query.eq('status', status)
+  const { data, error } = await query
+  if (error) throw new Error(`Failed to fetch email receipts: ${error.message}`)
+  return (data ?? []) as EmailReceipt[]
+}
+
+export async function insertEmailReceipt(
+  receipt: Omit<EmailReceipt, 'id' | 'created_at'>
+): Promise<EmailReceipt> {
+  const { data, error } = await supabase
+    .from('email_receipts')
+    .insert(receipt)
+    .select()
+    .single()
+  if (error) throw new Error(`Failed to insert email receipt: ${error.message}`)
+  return data as EmailReceipt
+}
+
+export async function updateEmailReceipt(
+  id: string,
+  updates: Partial<Omit<EmailReceipt, 'id' | 'created_at'>>
+): Promise<void> {
+  const { error } = await supabase.from('email_receipts').update(updates).eq('id', id)
+  if (error) throw new Error(`Failed to update email receipt: ${error.message}`)
+}
+
+/** Actuals for a budget period — sums transactions by account */
+export async function getBudgetActuals(
+  periodStart: string,
+  periodEnd: string
+): Promise<Record<string, number>> {
+  const { data, error } = await supabase
+    .from('transactions')
+    .select('account_id, amount, business_use_pct, is_personal')
+    .gte('date', periodStart)
+    .lte('date', periodEnd)
+    .eq('is_personal', false)
+  if (error) throw new Error(`Failed to fetch budget actuals: ${error.message}`)
+  const totals: Record<string, number> = {}
+  for (const t of data ?? []) {
+    if (!t.account_id) continue
+    const bizPct = (t.business_use_pct ?? 100) / 100
+    totals[t.account_id] = (totals[t.account_id] ?? 0) + Math.abs(t.amount) * bizPct
+  }
+  return totals
+}
+
+/** Upcoming recurring expenses within the next N days */
+export async function getUpcomingRecurring(days = 60): Promise<RecurringExpense[]> {
+  const today = new Date().toISOString().split('T')[0]
+  const future = new Date(Date.now() + days * 86400_000).toISOString().split('T')[0]
+  const { data, error } = await supabase
+    .from('recurring_expenses')
+    .select('*, account:accounts(id, code, name, type, tax_code, business_use_pct)')
+    .eq('is_active', true)
+    .gte('next_due_date', today)
+    .lte('next_due_date', future)
+    .order('next_due_date')
+  if (error) throw new Error(`Failed to fetch upcoming recurring: ${error.message}`)
+  return (data ?? []) as RecurringExpense[]
 }

@@ -40,13 +40,16 @@ export function BottomTabs({ onNewTap }: BottomTabsProps) {
   if (keyboardOpen) return null
 
   const morePages = [
-    { href: '/transactions', label: 'Transactions' },
-    { href: '/gst', label: 'GST / BAS' },
-    { href: '/deductions', label: 'Deductions' },
-    { href: '/reports', label: 'Reports' },
-    { href: '/household', label: 'Household' },
-    { href: '/time-machine', label: 'Time Machine' },
-    { href: '/settings', label: 'Settings' },
+    { href: '/transactions',   label: 'Transactions' },
+    { href: '/gst',            label: 'GST / BAS' },
+    { href: '/budgets',        label: 'Budgets' },
+    { href: '/cash-flow',      label: 'Cash Flow' },
+    { href: '/email-receipts', label: 'Email Receipts' },
+    { href: '/deductions',     label: 'Deductions' },
+    { href: '/reports',        label: 'Reports' },
+    { href: '/household',      label: 'Household' },
+    { href: '/time-machine',   label: 'Time Machine' },
+    { href: '/settings',       label: 'Settings' },
   ]
 
   return (
