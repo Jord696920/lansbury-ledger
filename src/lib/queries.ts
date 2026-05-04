@@ -209,14 +209,20 @@ export async function getBudgets(periodStart?: string, periodEnd?: string): Prom
     .from('budgets')
     .select('*, account:accounts(id, code, name, type, tax_code, business_use_pct)')
     .order('category_name')
-  if (periodStart) query = query.gte('period_start', periodStart)
-  if (periodEnd)   query = query.lte('period_end', periodEnd)
+
+  // Overlap: return budgets whose range intersects the selected period.
+  // This ensures quarterly/annual budgets appear when viewing a single month.
+  if (periodEnd)   query = query.lte('period_start', periodEnd)
+  if (periodStart) query = query.gte('period_end', periodStart)
+
   const { data, error } = await query
   if (error) throw new Error(`Failed to fetch budgets: ${error.message}`)
   return (data ?? []) as Budget[]
 }
 
-export async function upsertBudget(budget: Omit<Budget, 'id' | 'created_at' | 'updated_at' | 'account'>): Promise<Budget> {
+export async function upsertBudget(
+  budget: Omit<Budget, 'id' | 'created_at' | 'updated_at' | 'account'> & { id?: string }
+): Promise<Budget> {
   const { data, error } = await supabase
     .from('budgets')
     .upsert({ ...budget, updated_at: new Date().toISOString() })
@@ -311,15 +317,14 @@ export async function getBudgetActuals(
   return totals
 }
 
-/** Upcoming recurring expenses within the next N days */
+/** Upcoming recurring expenses within the next N days — includes overdue items. */
 export async function getUpcomingRecurring(days = 60): Promise<RecurringExpense[]> {
-  const today = new Date().toISOString().split('T')[0]
   const future = new Date(Date.now() + days * 86400_000).toISOString().split('T')[0]
   const { data, error } = await supabase
     .from('recurring_expenses')
     .select('*, account:accounts(id, code, name, type, tax_code, business_use_pct)')
     .eq('is_active', true)
-    .gte('next_due_date', today)
+    // Include overdue items — overdue bills are the most important to surface.
     .lte('next_due_date', future)
     .order('next_due_date')
   if (error) throw new Error(`Failed to fetch upcoming recurring: ${error.message}`)

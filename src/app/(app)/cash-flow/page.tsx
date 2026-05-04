@@ -11,11 +11,11 @@ import {
 import { formatCurrency } from '@/lib/utils'
 import {
   addDays, addWeeks, addMonths, addQuarters, addYears,
-  format, parseISO, differenceInDays, startOfWeek, endOfWeek,
+  format, parseISO, differenceInDays,
   isWithinInterval, startOfDay,
 } from 'date-fns'
 import {
-  Plus, Pencil, Trash2, AlertTriangle, X, Calendar,
+  Plus, Pencil, Trash2, AlertTriangle, X,
   RefreshCw, CreditCard, Zap, ChevronDown, ChevronUp,
 } from 'lucide-react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
@@ -66,6 +66,41 @@ function nextDueAfter(current: string, freq: Frequency): string {
   }
 }
 
+/** Advance next_due_date repeatedly until it is after minDate. */
+function advanceDueUntilAfter(current: string, freq: Frequency, minDate: Date): string {
+  let due = parseISO(current)
+  let guard = 0
+  while (due <= minDate && guard < 60) {
+    due = parseISO(nextDueAfter(format(due, 'yyyy-MM-dd'), freq))
+    guard++
+  }
+  return format(due, 'yyyy-MM-dd')
+}
+
+/** Amount ex-GST adjusted for business use. */
+function recurringBusinessExpense(rec: RecurringExpense): number {
+  const exGst = rec.gst_included ? rec.amount / 1.1 : rec.amount
+  return exGst * (rec.business_use_pct / 100)
+}
+
+/** Count how many times a recurring item falls within [start, end], advancing from its next_due_date. */
+function recurringOccurrencesInRange(rec: RecurringExpense, start: Date, end: Date): number {
+  let due = parseISO(rec.next_due_date)
+  let guard = 0
+  // Advance stale items into the forecast window.
+  while (due < start && guard < 60) {
+    due = parseISO(nextDueAfter(format(due, 'yyyy-MM-dd'), rec.frequency))
+    guard++
+  }
+  let count = 0
+  while (isWithinInterval(due, { start, end }) && guard < 80) {
+    count++
+    due = parseISO(nextDueAfter(format(due, 'yyyy-MM-dd'), rec.frequency))
+    guard++
+  }
+  return count
+}
+
 function freqLabel(f: Frequency): string {
   return { weekly: 'Weekly', fortnightly: 'Fortnightly', monthly: 'Monthly', quarterly: 'Quarterly', annual: 'Annual' }[f]
 }
@@ -106,12 +141,10 @@ function buildCashFlow(
       })
       .reduce((s, inv) => s + inv.total, 0)
 
-    // Expenses: recurring expenses due in this week
+    // Expenses: expand recurrence so weekly/fortnightly/monthly items appear every period.
     const expenses = recurring.reduce((s, rec) => {
-      const due = parseISO(rec.next_due_date)
-      if (!isWithinInterval(due, { start: weekStart, end: weekEnd })) return s
-      const amtExGST = rec.gst_included ? rec.amount / 1.1 : rec.amount
-      return s + amtExGST * (rec.business_use_pct / 100)
+      const occurrences = recurringOccurrencesInRange(rec, weekStart, weekEnd)
+      return s + recurringBusinessExpense(rec) * occurrences
     }, 0)
 
     balance += income - expenses
@@ -142,14 +175,12 @@ export default function CashFlowPage() {
   const load = useCallback(async () => {
     setLoading(true)
     try {
-      const [rec, accts, inv] = await Promise.all([
+      const [rec, accts] = await Promise.all([
         getRecurringExpenses(false),
         getAccounts(),
-        fetch('/api/invoices-simple').then(() => null).catch(() => null),
       ])
       setRecurring(rec)
       setAccounts(accts.filter(a => a.type === 'expense'))
-      // Inline invoice fetch via query
     } catch (e) {
       setError((e as Error).message)
     } finally {
@@ -172,8 +203,8 @@ export default function CashFlowPage() {
 
   const upcoming30  = active.filter(r => differenceInDays(parseISO(r.next_due_date), today) <= 30)
   const monthlyTotal = active.reduce((s, r) => {
-    const monthly = { weekly: 52, fortnightly: 26, monthly: 12, quarterly: 4, annual: 1 }[r.frequency]
-    return s + (r.amount / 1.1 * (r.business_use_pct / 100)) * (monthly / 12)
+    const annualisedCount = { weekly: 52, fortnightly: 26, monthly: 12, quarterly: 4, annual: 1 }[r.frequency]
+    return s + recurringBusinessExpense(r) * (annualisedCount / 12)
   }, 0)
 
   const chartData = buildCashFlow(invoices, active, parseFloat(openingBalance) || 0)
@@ -238,10 +269,14 @@ export default function CashFlowPage() {
 
   async function handleMarkPaid(rec: RecurringExpense) {
     try {
+      const todayStart = startOfDay(today)
+      // Advance past one period first, then keep going until the date is after today.
+      // This handles stale overdue items (e.g. a Feb bill marked paid in May).
+      const firstAdvanced = nextDueAfter(rec.next_due_date, rec.frequency)
       await upsertRecurringExpense({
         ...rec,
         last_paid_date: today.toISOString().split('T')[0],
-        next_due_date: nextDueAfter(rec.next_due_date, rec.frequency),
+        next_due_date: advanceDueUntilAfter(firstAdvanced, rec.frequency, todayStart),
       })
       await load()
     } catch (e) {

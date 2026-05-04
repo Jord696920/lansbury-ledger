@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+export const runtime = 'nodejs'
+
 interface ParsedReceipt {
   vendor: string | null
   amount: number | null
@@ -11,6 +13,51 @@ interface ParsedReceipt {
   confidence: number
   notes: string | null
 }
+
+// ── Normalisation helpers ─────────────────────────────────────────────────────
+
+function extractJsonObject(text: string): string {
+  const trimmed = text.trim()
+  const start = trimmed.indexOf('{')
+  const end   = trimmed.lastIndexOf('}')
+  if (start === -1 || end === -1 || end <= start) {
+    throw new Error('AI response did not contain a JSON object')
+  }
+  return trimmed.slice(start, end + 1)
+}
+
+function clamp(n: number, min: number, max: number): number {
+  return Math.min(Math.max(n, min), max)
+}
+
+function numberOrNull(value: unknown): number | null {
+  if (value === null || value === undefined || value === '') return null
+  const n = Number(value)
+  return Number.isFinite(n) ? n : null
+}
+
+function validDateOrNull(value: unknown): string | null {
+  if (typeof value !== 'string') return null
+  return /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : null
+}
+
+function normaliseParsedReceipt(input: Partial<ParsedReceipt>): ParsedReceipt {
+  const businessUse = Number(input.business_use_pct ?? 100)
+  const confidence  = Number(input.confidence ?? 0)
+  return {
+    vendor:           typeof input.vendor === 'string' && input.vendor.trim() ? input.vendor.trim() : null,
+    amount:           numberOrNull(input.amount),
+    gst:              numberOrNull(input.gst),
+    date:             validDateOrNull(input.date),
+    description:      typeof input.description === 'string' && input.description.trim() ? input.description.trim() : null,
+    category:         typeof input.category === 'string' && input.category.trim() ? input.category.trim() : null,
+    business_use_pct: Number.isFinite(businessUse) ? clamp(businessUse, 0, 100) : 100,
+    confidence:       Number.isFinite(confidence)  ? clamp(confidence, 0, 100)  : 0,
+    notes:            typeof input.notes === 'string' && input.notes.trim() ? input.notes.trim() : null,
+  }
+}
+
+// ── Prompt ────────────────────────────────────────────────────────────────────
 
 const SYSTEM_PROMPT = `You are an Australian tax receipt parser for a GST-registered sole trader (Jordan Lansbury, ABN 18 650 448 336, vehicle sourcing consultant).
 
@@ -40,25 +87,30 @@ Rules:
 - confidence = 0-100 based on clarity of the data
 - Return ONLY the JSON object, no markdown, no explanation`
 
+// ── Handler ───────────────────────────────────────────────────────────────────
+
 export async function POST(req: NextRequest) {
   const apiKey = process.env.ANTHROPIC_API_KEY
+  const model  = process.env.ANTHROPIC_MODEL ?? 'claude-haiku-4-5-20251001'
+
   if (!apiKey) {
     return NextResponse.json({ error: 'Anthropic API key not configured' }, { status: 503 })
   }
 
   try {
-    const { raw_body, email_subject, email_from, email_date } = await req.json()
+    const body = await req.json()
+    const rawBody: string = typeof body.raw_body === 'string' ? body.raw_body : ''
 
-    if (!raw_body?.trim()) {
+    if (!rawBody.trim()) {
       return NextResponse.json({ error: 'raw_body is required' }, { status: 400 })
     }
 
-    const userContent = `Email subject: ${email_subject ?? '(none)'}
-From: ${email_from ?? '(unknown)'}
-Date: ${email_date ?? '(unknown)'}
+    const userContent = `Email subject: ${body.email_subject ?? '(none)'}
+From: ${body.email_from ?? '(unknown)'}
+Date: ${body.email_date ?? '(unknown)'}
 
 Body:
-${(raw_body as string).slice(0, 8000)}`
+${rawBody.slice(0, 8000)}`
 
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -68,7 +120,7 @@ ${(raw_body as string).slice(0, 8000)}`
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
+        model,
         max_tokens: 512,
         system: SYSTEM_PROMPT,
         messages: [{ role: 'user', content: userContent }],
@@ -85,9 +137,10 @@ ${(raw_body as string).slice(0, 8000)}`
 
     let parsed: ParsedReceipt
     try {
-      parsed = JSON.parse(rawText.trim()) as ParsedReceipt
-    } catch {
-      return NextResponse.json({ error: 'AI returned unparseable response', raw: rawText }, { status: 422 })
+      parsed = normaliseParsedReceipt(JSON.parse(extractJsonObject(rawText)) as Partial<ParsedReceipt>)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'AI returned unparseable response'
+      return NextResponse.json({ error: message, raw: rawText }, { status: 422 })
     }
 
     return NextResponse.json({ parsed, raw: rawText })
