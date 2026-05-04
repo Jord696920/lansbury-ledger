@@ -18,20 +18,26 @@ import {
   ShieldCheck,
   ChevronLeft,
   ChevronRight,
+  Target,
+  TrendingUp,
+  Mail,
 } from 'lucide-react'
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/transactions', label: 'Transactions', icon: ArrowLeftRight },
-  { href: '/invoices', label: 'Invoices', icon: FileText },
-  { href: '/gst', label: 'GST / BAS', icon: Receipt },
-  { href: '/tax', label: 'Tax Position', icon: Calculator },
-  { href: '/deductions', label: 'Deductions', icon: Shield },
-  { href: '/reports', label: 'Reports', icon: BarChart3 },
-  { href: '/household', label: 'Household', icon: Home },
-  { href: '/time-machine', label: 'Time Machine', icon: Clock },
-  { href: '/admin/integrity', label: 'Integrity', icon: ShieldCheck },
-  { href: '/settings', label: 'Settings', icon: Settings },
+  { href: '/dashboard',       label: 'Dashboard',      icon: LayoutDashboard },
+  { href: '/transactions',    label: 'Transactions',   icon: ArrowLeftRight },
+  { href: '/invoices',        label: 'Invoices',       icon: FileText },
+  { href: '/gst',             label: 'GST / BAS',      icon: Receipt },
+  { href: '/tax',             label: 'Tax Position',   icon: Calculator },
+  { href: '/budgets',         label: 'Budgets',        icon: Target },
+  { href: '/cash-flow',       label: 'Cash Flow',      icon: TrendingUp },
+  { href: '/email-receipts',  label: 'Email Receipts', icon: Mail },
+  { href: '/deductions',      label: 'Deductions',     icon: Shield },
+  { href: '/reports',         label: 'Reports',        icon: BarChart3 },
+  { href: '/household',       label: 'Household',      icon: Home },
+  { href: '/time-machine',    label: 'Time Machine',   icon: Clock },
+  { href: '/admin/integrity', label: 'Integrity',      icon: ShieldCheck },
+  { href: '/settings',        label: 'Settings',       icon: Settings },
 ]
 
 export function Sidebar() {

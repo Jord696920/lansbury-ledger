@@ -161,6 +161,68 @@ export interface Anomaly {
   created_at: string
 }
 
+// ── Financial Hub Types ───────────────────────────────────────────────────────
+
+export type BudgetPeriodType = 'monthly' | 'quarterly' | 'annual'
+export type RecurringFrequency = 'weekly' | 'fortnightly' | 'monthly' | 'quarterly' | 'annual'
+export type PaymentMethod = 'direct_debit' | 'credit_card' | 'bank_transfer' | 'manual'
+export type EmailReceiptStatus = 'pending' | 'matched' | 'ignored' | 'created'
+
+export interface Budget {
+  id: string
+  account_id: string | null
+  category_name: string
+  period_type: BudgetPeriodType
+  period_start: string
+  period_end: string
+  amount: number
+  notes: string | null
+  created_at: string
+  updated_at: string
+  account?: Account
+}
+
+export interface RecurringExpense {
+  id: string
+  name: string
+  description: string | null
+  vendor_name: string | null
+  amount: number
+  gst_included: boolean
+  account_id: string | null
+  frequency: RecurringFrequency
+  next_due_date: string
+  last_paid_date: string | null
+  business_use_pct: number
+  is_active: boolean
+  payment_method: PaymentMethod | null
+  notes: string | null
+  created_at: string
+  updated_at: string
+  account?: Account
+}
+
+export interface EmailReceipt {
+  id: string
+  email_subject: string | null
+  email_from: string | null
+  email_date: string | null
+  raw_body: string
+  parsed_vendor: string | null
+  parsed_amount: number | null
+  parsed_gst: number | null
+  parsed_date: string | null
+  parsed_description: string | null
+  parsed_category: string | null
+  transaction_id: string | null
+  account_id: string | null
+  business_use_pct: number | null
+  status: EmailReceiptStatus
+  ai_confidence: number | null
+  ai_raw_response: string | null
+  created_at: string
+}
+
 export interface BusinessProfile {
   id: string
   business_name: string
